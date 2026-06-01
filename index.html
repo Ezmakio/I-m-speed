@@ -140,6 +140,37 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
 
 /* Scrollbar hidden */
 .screen::-webkit-scrollbar{display:none}
+
+/* COUNTDOWN OVERLAY */
+#countdown-overlay{position:fixed;inset:0;background:#0f0608;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#countdown-overlay.open{display:flex}
+#countdown-word{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+#countdown-num{font-family:'Barlow Condensed',sans-serif;font-size:120px;font-weight:900;line-height:1;color:var(--accent);letter-spacing:-.02em}
+#countdown-num.go{color:var(--red-bright);font-size:72px;letter-spacing:.1em}
+
+/* POCKET LOCK */
+#pocket-overlay{position:fixed;inset:0;background:#0f0608;z-index:300;display:none;flex-direction:column;align-items:center;justify-content:center;gap:24px;touch-action:none}
+#pocket-overlay.open{display:flex}
+.pocket-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border2);width:100%;border-top:2px solid var(--border2);border-bottom:2px solid var(--border2)}
+.pocket-stat{background:var(--surface);padding:20px 8px;text-align:center}
+.pocket-stat-val{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--text)}
+.pocket-stat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+.pocket-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.pocket-unlock{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;border:1px solid var(--border2);border-radius:4px;padding:10px 24px;background:var(--surface);cursor:pointer;-webkit-user-select:none;user-select:none}
+
+/* SUMMARY MODAL */
+#summary-modal{position:fixed;inset:0;background:rgba(8,2,3,.97);z-index:400;display:none;flex-direction:column;align-items:center;justify-content:center;gap:0;overflow-y:auto;padding:20px}
+#summary-modal.open{display:flex}
+.summary-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.summary-headline{font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:900;letter-spacing:.02em;text-transform:uppercase;color:var(--accent);line-height:1;text-align:center;margin-bottom:4px}
+.summary-sub{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:600;letter-spacing:.1em;color:var(--muted);margin-bottom:28px;text-align:center}
+.summary-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:320px;margin-bottom:16px}
+.summary-stat{background:var(--surface);border:1px solid var(--border2);border-top:3px solid var(--red-bright);border-radius:4px;padding:16px;text-align:center}
+.summary-stat.full{grid-column:1/-1}
+.summary-stat-val{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:var(--text);margin-bottom:4px}
+.summary-stat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.summary-pr{background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.4);border-radius:4px;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--red-bright);margin-bottom:16px;width:100%;max-width:320px;text-align:center;display:none}
+.summary-pr.show{display:block}
 </style>
 </head>
 <body>
@@ -250,8 +281,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
         <button class="btn btn-primary" id="run-btn" onclick="toggleRun()" style="flex:2">
           Iniciar
         </button>
+        <button class="btn btn-secondary" id="pocket-btn" onclick="togglePocket()" style="flex:1;display:none;font-size:13px;padding:14px 8px">
+          Bolsillo
+        </button>
         <button class="btn btn-danger" id="stop-btn" onclick="stopRun()" style="flex:1;display:none">
-          ■ Fin
+          Fin
         </button>
       </div>
 
@@ -314,6 +348,39 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
       Historial
     </button>
   </nav>
+</div>
+
+<!-- COUNTDOWN -->
+<div id="countdown-overlay">
+  <div id="countdown-word"></div>
+  <div id="countdown-num"></div>
+</div>
+
+<!-- POCKET LOCK -->
+<div id="pocket-overlay">
+  <div class="pocket-label">Modo bolsillo activo</div>
+  <div class="pocket-stats">
+    <div class="pocket-stat"><div class="pocket-stat-val" id="pk-time">00:00</div><div class="pocket-stat-lbl">Tiempo</div></div>
+    <div class="pocket-stat"><div class="pocket-stat-val" id="pk-dist">0.00</div><div class="pocket-stat-lbl">km</div></div>
+    <div class="pocket-stat"><div class="pocket-stat-val" id="pk-pace">--:--</div><div class="pocket-stat-lbl">Ritmo</div></div>
+  </div>
+  <div style="font-family:'Rajdhani',sans-serif;font-size:14px;color:var(--muted);font-weight:500;text-align:center;max-width:260px;line-height:1.5">Toca y mantén el botón para desbloquear</div>
+  <button class="pocket-unlock" id="pocket-unlock-btn">Mantener para desbloquear</button>
+</div>
+
+<!-- SUMMARY -->
+<div id="summary-modal">
+  <div class="summary-tag">Sesion completada</div>
+  <div class="summary-headline" id="sum-dist">0.00</div>
+  <div class="summary-sub" id="sum-dist-lbl">KILOMETROS RECORRIDOS</div>
+  <div class="summary-stats">
+    <div class="summary-stat"><div class="summary-stat-val" id="sum-time">00:00</div><div class="summary-stat-lbl">Tiempo total</div></div>
+    <div class="summary-stat"><div class="summary-stat-val" id="sum-pace">--:--</div><div class="summary-stat-lbl">Ritmo prom.</div></div>
+    <div class="summary-stat full"><div class="summary-stat-val" id="sum-cal">0</div><div class="summary-stat-lbl">Calorias estimadas</div></div>
+  </div>
+  <div class="summary-pr" id="sum-pr">Nuevo record personal</div>
+  <button class="btn btn-primary" onclick="saveSummary()" style="width:100%;max-width:320px;margin-top:8px">Guardar carrera</button>
+  <button class="btn btn-secondary" onclick="discardSummary()" style="width:100%;max-width:320px;margin-top:8px;font-size:14px;padding:10px">Descartar</button>
 </div>
 
 <!-- TIMER MODAL -->
@@ -614,34 +681,7 @@ function updateRunUI(){
 
 function toggleRun(){
   if(!running){
-    running=true;
-    runPaused=false;
-    document.getElementById('run-btn').textContent='⏸ Pausar';
-    document.getElementById('stop-btn').style.display='flex';
-    document.getElementById('map-placeholder').style.display='none';
-    document.getElementById('run-status-pill').className='status-pill running';
-    document.getElementById('run-status-text').textContent='Corriendo';
-    initCanvas();
-    runInterval=setInterval(()=>{if(!runPaused){runSeconds++;updateRunUI();}},1000);
-    if(navigator.geolocation){
-      watchId=navigator.geolocation.watchPosition(
-        function(pos){
-          const p={lat:pos.coords.latitude,lon:pos.coords.longitude};
-          if(lastPos) totalDist+=haversine(lastPos,p);
-          lastPos=p;
-          points.push(p);
-          updateRunUI();
-          drawRoute();
-        },
-        function(err){
-          console.warn('GPS error ('+err.code+'): '+err.message);
-          simulateGPS();
-        },
-        {enableHighAccuracy:true,maximumAge:2000,timeout:10000}
-      );
-    } else {
-      simulateGPS();
-    }
+    startCountdown();
   } else if(!runPaused){
     runPaused=true;
     document.getElementById('run-btn').textContent='Continuar';
@@ -649,10 +689,133 @@ function toggleRun(){
     document.getElementById('run-status-text').textContent='Pausado';
   } else {
     runPaused=false;
-    document.getElementById('run-btn').textContent='⏸ Pausar';
+    document.getElementById('run-btn').textContent='Pausar';
     document.getElementById('run-status-pill').className='status-pill running';
     document.getElementById('run-status-text').textContent='Corriendo';
   }
+}
+
+// COUNTDOWN
+const COUNTDOWN_STEPS = [
+  {word:'En sus marcas',num:'',dur:1000},
+  {word:'Listos',num:'',dur:900},
+  {word:'',num:'3',dur:800},
+  {word:'',num:'2',dur:800},
+  {word:'',num:'1',dur:800},
+  {word:'',num:'FUERA',dur:700},
+];
+
+function startCountdown(){
+  const overlay = document.getElementById('countdown-overlay');
+  overlay.classList.add('open');
+  let i = 0;
+  function step(){
+    if(i >= COUNTDOWN_STEPS.length){
+      overlay.classList.remove('open');
+      beginRun();
+      return;
+    }
+    const s = COUNTDOWN_STEPS[i];
+    document.getElementById('countdown-word').textContent = s.word;
+    const numEl = document.getElementById('countdown-num');
+    numEl.textContent = s.num;
+    numEl.className = s.num === 'FUERA' ? 'go' : '';
+    if(s.num && navigator.vibrate) navigator.vibrate(s.num==='FUERA'?[0,0,200]:80);
+    i++;
+    setTimeout(step, s.dur);
+  }
+  step();
+}
+
+// WAKE LOCK
+let wakeLock = null;
+async function requestWakeLock(){
+  try{
+    if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen');
+  }catch(e){ console.warn('WakeLock no disponible:', e); }
+}
+function releaseWakeLock(){
+  if(wakeLock){ wakeLock.release(); wakeLock=null; }
+}
+
+function beginRun(){
+  running=true;
+  runPaused=false;
+  document.getElementById('run-btn').textContent='Pausar';
+  document.getElementById('stop-btn').style.display='flex';
+  document.getElementById('pocket-btn').style.display='flex';
+  document.getElementById('map-placeholder').style.display='none';
+  document.getElementById('run-status-pill').className='status-pill running';
+  document.getElementById('run-status-text').textContent='Corriendo';
+  initCanvas();
+  requestWakeLock();
+  runInterval=setInterval(()=>{
+    if(!runPaused){
+      runSeconds++;
+      updateRunUI();
+      updatePocketUI();
+    }
+  },1000);
+  if(navigator.geolocation){
+    watchId=navigator.geolocation.watchPosition(
+      function(pos){
+        const p={lat:pos.coords.latitude,lon:pos.coords.longitude};
+        if(lastPos) totalDist+=haversine(lastPos,p);
+        lastPos=p;
+        points.push(p);
+        updateRunUI();
+        updatePocketUI();
+        drawRoute();
+      },
+      function(err){
+        console.warn('GPS error ('+err.code+'): '+err.message);
+        simulateGPS();
+      },
+      {enableHighAccuracy:true,maximumAge:2000,timeout:10000}
+    );
+  } else {
+    simulateGPS();
+  }
+}
+
+// POCKET MODE
+let pocketActive = false;
+let pocketHoldTimer = null;
+
+function updatePocketUI(){
+  document.getElementById('pk-time').textContent = fmtTime(runSeconds);
+  document.getElementById('pk-dist').textContent = totalDist.toFixed(2);
+  if(runSeconds>0&&totalDist>0){
+    const pm2=runSeconds/60/totalDist;
+    const pm=Math.floor(pm2),ps=Math.round((pm2-pm)*60);
+    document.getElementById('pk-pace').textContent=pm+':'+(ps<10?'0':'')+ps;
+  }
+}
+
+function togglePocket(){
+  pocketActive=true;
+  const overlay=document.getElementById('pocket-overlay');
+  overlay.classList.add('open');
+  updatePocketUI();
+  const btn=document.getElementById('pocket-unlock-btn');
+  btn.addEventListener('pointerdown',startUnlockHold);
+  btn.addEventListener('pointerup',cancelUnlockHold);
+  btn.addEventListener('pointerleave',cancelUnlockHold);
+}
+
+function startUnlockHold(){
+  const btn=document.getElementById('pocket-unlock-btn');
+  btn.textContent='Manteniendo...';
+  pocketHoldTimer=setTimeout(()=>{
+    pocketActive=false;
+    document.getElementById('pocket-overlay').classList.remove('open');
+    btn.textContent='Mantener para desbloquear';
+  },1500);
+}
+
+function cancelUnlockHold(){
+  clearTimeout(pocketHoldTimer);
+  document.getElementById('pocket-unlock-btn').textContent='Mantener para desbloquear';
 }
 
 let simInterval=null;
@@ -667,6 +830,7 @@ function simulateGPS(){
     lastPos=p;
     points.push(p);
     updateRunUI();
+    updatePocketUI();
     drawRoute();
   },1500);
 }
@@ -676,21 +840,66 @@ function stopRun(){
   clearInterval(runInterval);
   clearInterval(simInterval);
   if(watchId) navigator.geolocation.clearWatch(watchId);
-  running=false;runPaused=false;
+  releaseWakeLock();
+  running=false; runPaused=false;
   document.getElementById('run-btn').textContent='Iniciar';
   document.getElementById('stop-btn').style.display='none';
+  document.getElementById('pocket-btn').style.display='none';
   document.getElementById('run-status-pill').className='status-pill';
   document.getElementById('run-status-text').textContent='En pausa';
-  if(runSeconds>60){
-    saveRun(runSeconds,totalDist,points.slice());
-    alert('¡Carrera guardada! '+totalDist.toFixed(2)+' km en '+fmtTime(runSeconds)+' 🎉');
+  document.getElementById('pocket-overlay').classList.remove('open');
+  if(runSeconds>30){
+    showSummary(runSeconds, totalDist);
+  } else {
+    resetRunState();
   }
-  // Reset
-  runSeconds=0;totalDist=0;lastPos=null;points=[];watchId=null;
+}
+
+// SUMMARY
+let pendingSec=0, pendingDist=0, pendingPts=[];
+
+function calcCalories(sec, dist){
+  // Aprox: 60 kcal/km para 70kg caminando rápido/corriendo suave
+  const byDist = dist * 62;
+  const byTime = (sec/60) * 5.5;
+  return Math.round((byDist+byTime)/2);
+}
+
+function showSummary(sec, dist){
+  pendingSec=sec; pendingDist=dist; pendingPts=points.slice();
+  const runs=getRuns();
+  const isPR = runs.length===0 || dist > Math.max(...runs.map(r=>r.dist));
+  document.getElementById('sum-dist').textContent=dist.toFixed(2);
+  document.getElementById('sum-time').textContent=fmtTime(sec);
+  const cal=calcCalories(sec,dist);
+  document.getElementById('sum-cal').textContent=cal;
+  if(sec>0&&dist>0){
+    const pm2=sec/60/dist;
+    const pm=Math.floor(pm2),ps=Math.round((pm2-pm)*60);
+    document.getElementById('sum-pace').textContent=pm+':'+(ps<10?'0':'')+ps;
+  }
+  const prEl=document.getElementById('sum-pr');
+  isPR ? prEl.classList.add('show') : prEl.classList.remove('show');
+  document.getElementById('summary-modal').classList.add('open');
+}
+
+function saveSummary(){
+  document.getElementById('summary-modal').classList.remove('open');
+  saveRun(pendingSec, pendingDist, pendingPts);
+  resetRunState();
+  goTo('history');
+}
+
+function discardSummary(){
+  document.getElementById('summary-modal').classList.remove('open');
+  resetRunState();
+}
+
+function resetRunState(){
+  runSeconds=0; totalDist=0; lastPos=null; points=[]; watchId=null;
   updateRunUI();
   document.getElementById('map-placeholder').style.display='flex';
   if(ctx) ctx.clearRect(0,0,canvasW,canvasH);
-  goTo('history');
 }
 
 // STORAGE
@@ -721,12 +930,12 @@ function updateHomeStats(){
           </svg>
         </div>
         <div class="run-item-info">
-          <div class="run-item-date">Última: ${d.toLocaleDateString('es-PE',{weekday:'short',day:'numeric',month:'short'})}</div>
+          <div class="run-item-date">Ultima: ${d.toLocaleDateString('es-PE',{weekday:'short',day:'numeric',month:'short'})}</div>
           <div class="run-item-stats">${r.dist.toFixed(2)} km · ${fmtTime(r.sec)}</div>
         </div>
-        <span class="run-item-badge badge-green">✓</span>
+        <span class="run-item-badge badge-green">OK</span>
       </div>`;
-    document.getElementById('hero-msg').textContent = runs.length<3?'¡Vas muy bien! Sigue así':'Constante: '+runs.length+' carreras';
+    document.getElementById('hero-msg').textContent = runs.length<3?'Vas muy bien. Sigue asi.':'Constante: '+runs.length+' carreras.';
   }
 }
 
@@ -736,11 +945,12 @@ function renderHistory(){
   const totals=document.getElementById('history-totals');
   if(runs.length===0){
     totals.innerHTML='';
-    list.innerHTML=`<div class="empty-state"><div class="big"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#3d1820" stroke-width="1.5" stroke-linecap="square"><circle cx="13" cy="4" r="2"/><path d="M7 22l4-8 3 3 2-5"/><path d="M17 22l-2-4"/><path d="M6 12l2-5 3 3 2-3h3"/></svg></div><p>Aún no tienes carreras guardadas.<br>¡Completa tu primera sesión!</p></div>`;
+    list.innerHTML=`<div class="empty-state"><div class="big"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#3d1820" stroke-width="1.5" stroke-linecap="square"><circle cx="13" cy="4" r="2"/><path d="M7 22l4-8 3 3 2-5"/><path d="M17 22l-2-4"/><path d="M6 12l2-5 3 3 2-3h3"/></svg></div><p>Aun no tienes carreras guardadas. Completa tu primera sesion.</p></div>`;
     return;
   }
   const totalKm=runs.reduce((a,r)=>a+r.dist,0);
   const totalSec=runs.reduce((a,r)=>a+r.sec,0);
+  const maxDist=Math.max(...runs.map(r=>r.dist));
   totals.innerHTML=`
     <div class="total-banner">
       <div><div class="val">${totalKm.toFixed(1)}</div><div class="lbl">km totales</div></div>
@@ -749,7 +959,8 @@ function renderHistory(){
     </div>`;
   list.innerHTML=runs.map((r,i)=>{
     const d=new Date(r.date);
-    const badge=i===0?'<span class="run-item-badge badge-green">Última</span>':r.dist>3?'<span class="run-item-badge badge-purple">PR</span>':'';
+    const isPR=r.dist===maxDist && runs.filter(x=>x.dist===maxDist).length===1;
+    const badge=isPR?'<span class="run-item-badge badge-purple">RECORD</span>':i===0?'<span class="run-item-badge badge-green">Ultima</span>':'';
     return `<div class="run-item">
       <div class="run-item-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="square">
