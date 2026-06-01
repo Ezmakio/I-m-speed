@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0a0a0f">
+<meta name="theme-color" content="#080810">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,15 +16,15 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#0a0a0f;
-  --surface:#12121a;
-  --surface2:#1a1a26;
-  --border:#2a2a40;
+  --bg:#080810;
+  --surface:#0f0f1c;
+  --surface2:#161626;
+  --border:#22223a;
   --accent:#00e5a0;
   --accent2:#7c6cfa;
   --danger:#ff5f6d;
   --text:#f0f0f8;
-  --muted:#6b6b8a;
+  --muted:#5a5a7a;
   --card-r:18px;
   --safe-top:env(safe-area-inset-top,0px);
   --safe-bot:env(safe-area-inset-bottom,0px);
@@ -33,7 +33,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
 #app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto}
 
 /* NAV */
-#bottom-nav{display:flex;background:var(--surface);border-top:1px solid var(--border);padding-bottom:calc(var(--safe-bot) + 4px);flex-shrink:0}
+#bottom-nav{display:flex;background:var(--surface);border-top:1px solid var(--border);padding-bottom:calc(var(--safe-bot) + 4px);flex-shrink:0;position:relative;z-index:20}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;border:none;background:none;color:var(--muted);font-family:'Syne',sans-serif;font-size:10px;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:color .2s}
 .nav-btn.active{color:var(--accent)}
 .nav-icon{font-size:22px;line-height:1}
@@ -84,7 +84,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
 .progress-bar{height:100%;background:var(--accent);border-radius:99px;transition:width .5s}
 
 /* TIMER MODAL */
-#timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;display:none}
+#timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;display:none}
 #timer-modal.open{display:flex}
 .timer-ex-name{font-size:18px;font-weight:700;color:var(--muted);text-align:center}
 .timer-display{font-family:'Space Mono',monospace;font-size:80px;font-weight:700;color:var(--accent);line-height:1;letter-spacing:-.03em}
@@ -113,26 +113,47 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* HISTORY */
-.run-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px}
+.run-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .2s}
+.run-item:active{border-color:var(--accent2)}
 .run-item-icon{width:44px;height:44px;border-radius:12px;background:rgba(0,229,160,.12);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
 .run-item-info{flex:1;min-width:0}
 .run-item-date{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:3px}
 .run-item-stats{font-family:'Space Mono',monospace;font-size:15px;font-weight:700}
-.run-item-badge{font-size:11px;padding:4px 10px;border-radius:99px;font-weight:700}
+.run-item-badge{font-size:11px;padding:4px 10px;border-radius:99px;font-weight:700;flex-shrink:0}
 .badge-green{background:rgba(0,229,160,.15);color:var(--accent)}
 .badge-purple{background:rgba(124,108,250,.15);color:var(--accent2)}
 .empty-state{text-align:center;padding:48px 20px;color:var(--muted)}
 .empty-state .big{font-size:48px;margin-bottom:12px}
 .empty-state p{font-size:14px;line-height:1.6}
-.total-banner{background:linear-gradient(135deg,rgba(0,229,160,.1),rgba(124,108,250,.1));border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;gap:8px}
+.total-banner{background:linear-gradient(135deg,rgba(0,229,160,.08),rgba(124,108,250,.08));border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;gap:8px}
 .total-banner .val{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent)}
 .total-banner .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-top:2px}
+
+/* RUN DETAIL MODAL */
+#detail-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;display:none;flex-direction:column;overflow-y:auto}
+#detail-modal.open{display:flex}
+.detail-header{padding:calc(var(--safe-top) + 16px) 20px 16px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:5}
+.detail-back{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:8px 16px;color:var(--muted);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.detail-title{font-size:18px;font-weight:800;flex:1}
+.detail-body{padding:20px}
+.detail-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.detail-stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
+.detail-stat .val{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.detail-stat .lbl{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.detail-map{width:100%;height:200px;background:var(--surface2);border-radius:14px;margin-bottom:20px;overflow:hidden;position:relative}
+.detail-map canvas{width:100%;height:100%}
+.seg-title{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.seg-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.seg-row:last-child{border-bottom:none}
+.seg-num{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);width:28px;flex-shrink:0}
+.seg-bar-wrap{flex:1;background:var(--surface2);border-radius:99px;height:6px;overflow:hidden}
+.seg-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.seg-info{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;min-width:70px}
+.seg-pace{font-size:11px;color:var(--muted);text-align:right;min-width:55px}
 
 .mt12{margin-top:12px}
 .mt16{margin-top:16px}
 .gap12{display:flex;flex-direction:column;gap:12px}
-
-/* Scrollbar hidden */
 .screen::-webkit-scrollbar{display:none}
 </style>
 </head>
@@ -147,11 +168,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
       </div>
       <div class="screen-inner">
         <div class="hero">
-          <div class="hero-label">🌅 Bienvenido, corredor</div>
+          <div class="hero-label">⚡ Bienvenido, corredor</div>
           <div class="hero-title" id="hero-msg">¿Listo para tu primera carrera?</div>
           <div class="hero-sub">Empieza con el calentamiento para preparar tu cuerpo y evitar lesiones.</div>
         </div>
-
         <div class="stats-row">
           <div class="stat-card">
             <div class="stat-val" id="home-total-km">0.0</div>
@@ -162,47 +182,26 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
             <div class="stat-lbl">carreras</div>
           </div>
         </div>
-
         <div class="gap12">
-          <button class="btn btn-primary" onclick="goTo('warmup')">
-            🔥 Iniciar calentamiento
-          </button>
-          <button class="btn btn-secondary" onclick="goTo('run')">
-            ▶ Ir directo a correr
-          </button>
+          <button class="btn btn-primary" onclick="goTo('warmup')">🔥 Iniciar calentamiento</button>
+          <button class="btn btn-secondary" onclick="goTo('run')">▶ Ir directo a correr</button>
         </div>
-
         <div class="sec-title">Última actividad</div>
         <div id="home-last-run">
-          <div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">
-            Aún no tienes carreras. ¡Anímate! 💪
-          </div>
+          <div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">Aún no tienes carreras. ¡Anímate! 💪</div>
         </div>
       </div>
     </div>
 
     <!-- WARMUP -->
     <div class="screen" id="screen-warmup">
-      <div class="screen-header">
-        <h1>🔥 Calenta<span>miento</span></h1>
-      </div>
+      <div class="screen-header"><h1>🔥 Calenta<span>miento</span></h1></div>
       <div class="screen-inner">
-        <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:8px">
-          Completa todos los ejercicios antes de correr. Toca cada uno para iniciar el temporizador.
-        </div>
-
-        <div class="progress-bar-wrap mt16">
-          <div class="progress-bar" id="warmup-progress" style="width:0%"></div>
-        </div>
-        <div style="font-size:12px;color:var(--muted);text-align:right;margin-top:4px">
-          <span id="warmup-count">0</span>/6 ejercicios
-        </div>
-
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:8px">Completa todos los ejercicios antes de correr. Toca cada uno para iniciar el temporizador.</div>
+        <div class="progress-bar-wrap mt16"><div class="progress-bar" id="warmup-progress" style="width:0%"></div></div>
+        <div style="font-size:12px;color:var(--muted);text-align:right;margin-top:4px"><span id="warmup-count">0</span>/6 ejercicios</div>
         <div class="warmup-grid" id="warmup-grid"></div>
-
-        <button class="btn btn-primary mt16" id="warmup-done-btn" onclick="finishWarmup()" style="display:none">
-          ✓ Calentamiento completo — ¡A correr!
-        </button>
+        <button class="btn btn-primary mt16" id="warmup-done-btn" onclick="finishWarmup()" style="display:none">✓ Calentamiento completo — ¡A correr!</button>
       </div>
     </div>
 
@@ -215,14 +214,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
           <div>El mapa aparece al iniciar</div>
         </div>
       </div>
-
       <div class="run-status">
         <div class="status-pill" id="run-status-pill">
           <div class="dot"></div>
           <span id="run-status-text">En pausa</span>
         </div>
       </div>
-
       <div class="run-stats">
         <div class="run-stat">
           <div class="run-stat-val" id="run-time">00:00</div>
@@ -234,34 +231,26 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
         </div>
         <div class="run-stat">
           <div class="run-stat-val" id="run-pace">--:--</div>
-          <div class="run-stat-lbl">Ritmo/km</div>
+          <div class="run-stat-lbl">min/km</div>
         </div>
       </div>
-
       <div class="run-controls">
-        <button class="btn btn-primary" id="run-btn" onclick="toggleRun()" style="flex:2">
-          ▶ Iniciar
-        </button>
-        <button class="btn btn-danger" id="stop-btn" onclick="stopRun()" style="flex:1;display:none">
-          ■ Fin
-        </button>
+        <button class="btn btn-primary" id="run-btn" onclick="toggleRun()" style="flex:2">▶ Iniciar</button>
+        <button class="btn btn-danger" id="stop-btn" onclick="stopRun()" style="flex:1;display:none">■ Fin</button>
       </div>
-
       <div class="screen-inner" style="padding-top:0">
         <div class="sec-title">Consejos para principiantes</div>
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px">
-          <div style="font-size:13px;line-height:1.6;color:var(--muted)">💡 <strong style="color:var(--text)">Técnica run/walk:</strong> Alterna 1 min corriendo + 2 min caminando. Es la mejor forma de empezar sin agotarte.</div>
-          <div style="font-size:13px;line-height:1.6;color:var(--muted)">🫁 <strong style="color:var(--text)">Ritmo conversacional:</strong> Deberías poder hablar mientras corres. Si no puedes, ve más despacio.</div>
-          <div style="font-size:13px;line-height:1.6;color:var(--muted)">🎯 <strong style="color:var(--text)">Meta de hoy:</strong> 20 minutos de movimiento continuo, no importa la velocidad.</div>
+          <div style="font-size:13px;line-height:1.6;color:var(--muted)">💡 <strong style="color:var(--text)">Técnica run/walk:</strong> Alterna 1 min corriendo + 2 min caminando.</div>
+          <div style="font-size:13px;line-height:1.6;color:var(--muted)">🫁 <strong style="color:var(--text)">Ritmo conversacional:</strong> Si no puedes hablar, ve más despacio.</div>
+          <div style="font-size:13px;line-height:1.6;color:var(--muted)">🎯 <strong style="color:var(--text)">Meta de hoy:</strong> 20 minutos de movimiento continuo.</div>
         </div>
       </div>
     </div>
 
     <!-- HISTORY -->
     <div class="screen" id="screen-history">
-      <div class="screen-header">
-        <h1>Historial <span>&</span> Progreso</h1>
-      </div>
+      <div class="screen-header"><h1>Historial <span>&</span> Progreso</h1></div>
       <div class="screen-inner">
         <div id="history-totals"></div>
         <div id="history-list"></div>
@@ -271,22 +260,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
   </div>
 
   <nav id="bottom-nav">
-    <button class="nav-btn active" onclick="goTo('home')" id="nav-home">
-      <div class="nav-icon">🏠</div>
-      Inicio
-    </button>
-    <button class="nav-btn" onclick="goTo('warmup')" id="nav-warmup">
-      <div class="nav-icon">🔥</div>
-      Calentar
-    </button>
-    <button class="nav-btn" onclick="goTo('run')" id="nav-run">
-      <div class="nav-icon">▶</div>
-      Correr
-    </button>
-    <button class="nav-btn" onclick="goTo('history')" id="nav-history">
-      <div class="nav-icon">📊</div>
-      Historial
-    </button>
+    <button class="nav-btn active" onclick="goTo('home')" id="nav-home"><div class="nav-icon">🏠</div>Inicio</button>
+    <button class="nav-btn" onclick="goTo('warmup')" id="nav-warmup"><div class="nav-icon">🔥</div>Calentar</button>
+    <button class="nav-btn" onclick="goTo('run')" id="nav-run"><div class="nav-icon">▶</div>Correr</button>
+    <button class="nav-btn" onclick="goTo('history')" id="nav-history"><div class="nav-icon">📊</div>Historial</button>
   </nav>
 </div>
 
@@ -297,8 +274,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
   <div class="timer-circle">
     <svg width="180" height="180" viewBox="0 0 180 180">
       <circle class="track" cx="90" cy="90" r="80"/>
-      <circle class="fill" cx="90" cy="90" r="80" id="timer-arc"
-        stroke-dasharray="502" stroke-dashoffset="0"/>
+      <circle class="fill" cx="90" cy="90" r="80" id="timer-arc" stroke-dasharray="502" stroke-dashoffset="0"/>
     </svg>
     <div class="timer-center">
       <div class="timer-display" id="timer-num">0</div>
@@ -306,78 +282,84 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
     </div>
   </div>
   <div id="timer-tip" style="font-size:13px;color:var(--muted);text-align:center;max-width:260px;line-height:1.6;padding:0 20px"></div>
-  <button class="btn btn-primary" id="timer-next-btn" style="display:none;width:220px" onclick="closeTimer()">
-    ¡Listo! Siguiente →
-  </button>
+  <button class="btn btn-primary" id="timer-next-btn" style="display:none;width:220px" onclick="closeTimer()">¡Listo! Siguiente →</button>
+</div>
+
+<!-- RUN DETAIL MODAL -->
+<div id="detail-modal">
+  <div class="detail-header">
+    <button class="detail-back" onclick="closeDetail()">← Volver</button>
+    <div class="detail-title" id="detail-date"></div>
+  </div>
+  <div class="detail-body">
+    <div class="detail-stat-grid" id="detail-stats"></div>
+    <div class="detail-map" id="detail-map-wrap">
+      <canvas id="detail-canvas"></canvas>
+    </div>
+    <div class="seg-title">Análisis por kilómetro</div>
+    <div id="detail-segments"></div>
+  </div>
 </div>
 
 <script>
+// ─── WARMUP ───────────────────────────────────────────────
 const EXERCISES = [
-  {icon:'🦵',name:'Movilidad de cadera',sec:30,tip:'Círculos lentos con la cadera, 15 hacia cada lado. Mantén las rodillas ligeramente flexionadas.'},
-  {icon:'🦶',name:'Elevación de rodillas',sec:30,tip:'Marcha en el lugar levantando las rodillas hasta la altura de la cadera. Ritmo moderado.'},
-  {icon:'🏃',name:'Talones al glúteo',sec:30,tip:'Corre en el lugar llevando los talones hacia los glúteos. Mantén el torso erguido.'},
-  {icon:'💃',name:'Zancadas laterales',sec:20,tip:'Da 3 pasos a la derecha, luego 3 a la izquierda. Mantén las puntas de los pies al frente.'},
-  {icon:'🙆',name:'Rotación de tronco',sec:20,tip:'Pies separados al ancho de hombros, gira el torso de lado a lado con los brazos extendidos.'},
-  {icon:'🌊',name:'Ondulación de brazos',sec:20,tip:'Mueve los brazos en el patrón de la carrera, exagerando el movimiento. Relaja los hombros.'},
+  {icon:'🦵',name:'Movilidad de cadera',sec:30,tip:'Círculos lentos con la cadera, 15 hacia cada lado.'},
+  {icon:'🦶',name:'Elevación de rodillas',sec:30,tip:'Marcha en el lugar levantando las rodillas hasta la cadera.'},
+  {icon:'🏃',name:'Talones al glúteo',sec:30,tip:'Corre en el lugar llevando los talones hacia los glúteos.'},
+  {icon:'💃',name:'Zancadas laterales',sec:20,tip:'3 pasos a la derecha, luego 3 a la izquierda.'},
+  {icon:'🙆',name:'Rotación de tronco',sec:20,tip:'Gira el torso de lado a lado con los brazos extendidos.'},
+  {icon:'🌊',name:'Ondulación de brazos',sec:20,tip:'Mueve los brazos en el patrón de carrera, exagera el movimiento.'},
 ];
 
-let completedEx = new Set();
-let timerInterval = null;
-let currentExIdx = null;
+let completedEx=new Set(), timerInterval=null, currentExIdx=null;
 
 function initWarmup(){
-  const grid = document.getElementById('warmup-grid');
-  grid.innerHTML = '';
+  const grid=document.getElementById('warmup-grid');
+  grid.innerHTML='';
   EXERCISES.forEach((ex,i)=>{
-    const card = document.createElement('div');
-    card.className = 'ex-card' + (completedEx.has(i)?' done':'');
-    card.id = 'ex-'+i;
-    card.onclick = ()=>startTimer(i);
-    card.innerHTML = `<div class="ex-icon">${ex.icon}</div><div class="ex-name">${ex.name}</div><div class="ex-time">${ex.sec} seg</div>`;
+    const card=document.createElement('div');
+    card.className='ex-card'+(completedEx.has(i)?' done':'');
+    card.id='ex-'+i;
+    card.onclick=()=>startTimer(i);
+    card.innerHTML=`<div class="ex-icon">${ex.icon}</div><div class="ex-name">${ex.name}</div><div class="ex-time">${ex.sec} seg</div>`;
     grid.appendChild(card);
   });
   updateWarmupProgress();
 }
 
 function updateWarmupProgress(){
-  const pct = (completedEx.size/EXERCISES.length)*100;
-  document.getElementById('warmup-progress').style.width = pct+'%';
-  document.getElementById('warmup-count').textContent = completedEx.size;
-  document.getElementById('warmup-done-btn').style.display = completedEx.size===EXERCISES.length?'flex':'none';
+  const pct=(completedEx.size/EXERCISES.length)*100;
+  document.getElementById('warmup-progress').style.width=pct+'%';
+  document.getElementById('warmup-count').textContent=completedEx.size;
+  document.getElementById('warmup-done-btn').style.display=completedEx.size===EXERCISES.length?'flex':'none';
 }
 
 function startTimer(idx){
-  currentExIdx = idx;
-  const ex = EXERCISES[idx];
-  document.getElementById('timer-ex-name').textContent = ex.name;
-  document.getElementById('timer-tip').textContent = ex.tip;
+  currentExIdx=idx;
+  const ex=EXERCISES[idx];
+  document.getElementById('timer-ex-name').textContent=ex.name;
+  document.getElementById('timer-tip').textContent=ex.tip;
   document.getElementById('timer-next-btn').style.display='none';
   document.getElementById('timer-modal').classList.add('open');
-  let sec = ex.sec;
-  const total = ex.sec;
-  const arc = document.getElementById('timer-arc');
-  const circ = 502;
+  let sec=ex.sec;
+  const total=ex.sec;
+  const arc=document.getElementById('timer-arc');
+  const circ=502;
   function tick(){
-    document.getElementById('timer-num').textContent = sec;
-    const offset = circ * (1 - sec/total);
-    arc.style.strokeDashoffset = offset;
-    if(sec <= 0){
-      clearInterval(timerInterval);
-      markDone(idx);
-      document.getElementById('timer-num').textContent = '✓';
-      document.getElementById('timer-next-btn').style.display='flex';
-      return;
-    }
+    document.getElementById('timer-num').textContent=sec;
+    arc.style.strokeDashoffset=circ*(1-sec/total);
+    if(sec<=0){clearInterval(timerInterval);markDone(idx);document.getElementById('timer-num').textContent='✓';document.getElementById('timer-next-btn').style.display='flex';return;}
     sec--;
   }
   tick();
-  timerInterval = setInterval(tick,1000);
+  timerInterval=setInterval(tick,1000);
 }
 
 function markDone(idx){
   completedEx.add(idx);
-  const card = document.getElementById('ex-'+idx);
-  if(card) card.className = 'ex-card done';
+  const card=document.getElementById('ex-'+idx);
+  if(card) card.className='ex-card done';
   updateWarmupProgress();
 }
 
@@ -385,29 +367,24 @@ function closeTimer(){
   clearInterval(timerInterval);
   document.getElementById('timer-modal').classList.remove('open');
   if(currentExIdx!==null) markDone(currentExIdx);
-  currentExIdx = null;
+  currentExIdx=null;
 }
 
 function finishWarmup(){goTo('run');}
 
-// RUN TRACKING
-let running = false;
-let runPaused = false;
-let runSeconds = 0;
-let runInterval = null;
-let watchId = null;
-let points = [];
-let totalDist = 0;
-let lastPos = null;
+// ─── RUN TRACKING ────────────────────────────────────────
+let running=false, runPaused=false, runSeconds=0;
+let runInterval=null, watchId=null;
+let points=[], timestamps=[], totalDist=0, lastPos=null;
 let canvas, ctx, canvasW, canvasH;
 
 function initCanvas(){
-  canvas = document.getElementById('route-canvas');
-  canvasW = canvas.offsetWidth;
-  canvasH = canvas.offsetHeight;
-  canvas.width = canvasW;
-  canvas.height = canvasH;
-  ctx = canvas.getContext('2d');
+  canvas=document.getElementById('route-canvas');
+  canvasW=canvas.offsetWidth;
+  canvasH=canvas.offsetHeight;
+  canvas.width=canvasW;
+  canvas.height=canvasH;
+  ctx=canvas.getContext('2d');
 }
 
 function haversine(a,b){
@@ -418,67 +395,68 @@ function haversine(a,b){
   return R*2*Math.atan2(Math.sqrt(s),Math.sqrt(1-s));
 }
 
-function drawRoute(){
-  if(!ctx||points.length<1) return;
-  ctx.clearRect(0,0,canvasW,canvasH);
-  // Background
-  ctx.fillStyle='#0d1117';
-  ctx.fillRect(0,0,canvasW,canvasH);
-  // Grid
-  ctx.strokeStyle='rgba(255,255,255,.04)';
-  ctx.lineWidth=1;
-  for(let x=0;x<canvasW;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvasH);ctx.stroke();}
-  for(let y=0;y<canvasH;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvasW,y);ctx.stroke();}
-  if(points.length<2){
-    // Just draw dot
-    const p=points[0];
-    ctx.beginPath();ctx.arc(canvasW/2,canvasH/2,8,0,Math.PI*2);
-    ctx.fillStyle='#00e5a0';ctx.fill();
-    return;
-  }
-  // Normalize
-  let minLat=Infinity,maxLat=-Infinity,minLon=Infinity,maxLon=-Infinity;
-  points.forEach(p=>{minLat=Math.min(minLat,p.lat);maxLat=Math.max(maxLat,p.lat);minLon=Math.min(minLon,p.lon);maxLon=Math.max(maxLon,p.lon);});
-  const pad=40;
-  const scaleX=(canvasW-pad*2)/Math.max(maxLon-minLon,.0001);
-  const scaleY=(canvasH-pad*2)/Math.max(maxLat-minLat,.0001);
-  const toX=lon=>pad+(lon-minLon)*scaleX;
-  const toY=lat=>canvasH-pad-(lat-minLat)*scaleY;
-  // Route
-  ctx.beginPath();
-  ctx.moveTo(toX(points[0].lon),toY(points[0].lat));
-  points.forEach(p=>ctx.lineTo(toX(p.lon),toY(p.lat)));
-  ctx.strokeStyle='#00e5a0';ctx.lineWidth=3;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();
-  // Glow
-  ctx.beginPath();
-  ctx.moveTo(toX(points[0].lon),toY(points[0].lat));
-  points.forEach(p=>ctx.lineTo(toX(p.lon),toY(p.lat)));
-  ctx.strokeStyle='rgba(0,229,160,.2)';ctx.lineWidth=8;ctx.stroke();
-  // Current pos
-  const last=points[points.length-1];
-  ctx.beginPath();ctx.arc(toX(last.lon),toY(last.lat),8,0,Math.PI*2);
-  ctx.fillStyle='#00e5a0';ctx.fill();
-  ctx.beginPath();ctx.arc(toX(last.lon),toY(last.lat),14,0,Math.PI*2);
-  ctx.strokeStyle='rgba(0,229,160,.3)';ctx.lineWidth=3;ctx.stroke();
-  // Start
-  const first=points[0];
-  ctx.beginPath();ctx.arc(toX(first.lon),toY(first.lat),5,0,Math.PI*2);
-  ctx.fillStyle='#7c6cfa';ctx.fill();
+// Format pace as MM:SS per km (e.g. 6:30)
+function fmtPace(secPerKm){
+  if(!isFinite(secPerKm)||secPerKm<=0||secPerKm>3600) return '--:--';
+  const m=Math.floor(secPerKm/60);
+  const s=Math.round(secPerKm%60);
+  return m+':'+(s<10?'0':'')+s;
 }
 
-function fmtTime(s){
-  const m=Math.floor(s/60),sec=s%60;
+// Format time as MM:SS
+function fmtTime(totalSec){
+  const s=Math.round(totalSec);
+  const m=Math.floor(s/60);
+  const sec=s%60;
   return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+
+function drawRouteOnCtx(c,pts,w,h){
+  c.clearRect(0,0,w,h);
+  c.fillStyle='#0d1117';
+  c.fillRect(0,0,w,h);
+  c.strokeStyle='rgba(255,255,255,.04)';
+  c.lineWidth=1;
+  for(let x=0;x<w;x+=40){c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke();}
+  for(let y=0;y<h;y+=40){c.beginPath();c.moveTo(0,y);c.lineTo(w,y);c.stroke();}
+  if(!pts||pts.length<1) return;
+  if(pts.length<2){
+    c.beginPath();c.arc(w/2,h/2,8,0,Math.PI*2);
+    c.fillStyle='#00e5a0';c.fill();
+    return;
+  }
+  let minLat=Infinity,maxLat=-Infinity,minLon=Infinity,maxLon=-Infinity;
+  pts.forEach(p=>{minLat=Math.min(minLat,p.lat);maxLat=Math.max(maxLat,p.lat);minLon=Math.min(minLon,p.lon);maxLon=Math.max(maxLon,p.lon);});
+  const pad=40;
+  const scaleX=(w-pad*2)/Math.max(maxLon-minLon,.0001);
+  const scaleY=(h-pad*2)/Math.max(maxLat-minLat,.0001);
+  const toX=lon=>pad+(lon-minLon)*scaleX;
+  const toY=lat=>h-pad-(lat-minLat)*scaleY;
+  c.beginPath();c.moveTo(toX(pts[0].lon),toY(pts[0].lat));
+  pts.forEach(p=>c.lineTo(toX(p.lon),toY(p.lat)));
+  c.strokeStyle='rgba(0,229,160,.2)';c.lineWidth=8;c.lineCap='round';c.lineJoin='round';c.stroke();
+  c.beginPath();c.moveTo(toX(pts[0].lon),toY(pts[0].lat));
+  pts.forEach(p=>c.lineTo(toX(p.lon),toY(p.lat)));
+  c.strokeStyle='#00e5a0';c.lineWidth=3;c.stroke();
+  const last=pts[pts.length-1];
+  c.beginPath();c.arc(toX(last.lon),toY(last.lat),8,0,Math.PI*2);c.fillStyle='#00e5a0';c.fill();
+  c.beginPath();c.arc(toX(last.lon),toY(last.lat),14,0,Math.PI*2);c.strokeStyle='rgba(0,229,160,.3)';c.lineWidth=3;c.stroke();
+  const first=pts[0];
+  c.beginPath();c.arc(toX(first.lon),toY(first.lat),5,0,Math.PI*2);c.fillStyle='#7c6cfa';c.fill();
+}
+
+function drawRoute(){
+  if(!ctx) return;
+  drawRouteOnCtx(ctx,points,canvasW,canvasH);
 }
 
 function updateRunUI(){
   document.getElementById('run-time').textContent=fmtTime(runSeconds);
   document.getElementById('run-dist').textContent=totalDist.toFixed(2);
-  if(runSeconds>0&&totalDist>0){
-    const paceMin=runSeconds/60/totalDist;
-    const pm=Math.floor(paceMin);
-    const ps=Math.round((paceMin-pm)*60);
-    document.getElementById('run-pace').textContent=pm+':'+(ps<10?'0':'')+ps;
+  if(runSeconds>0&&totalDist>0.01){
+    // pace = seconds per km
+    const secPerKm=runSeconds/totalDist;
+    document.getElementById('run-pace').textContent=fmtPace(secPerKm);
   } else {
     document.getElementById('run-pace').textContent='--:--';
   }
@@ -486,8 +464,7 @@ function updateRunUI(){
 
 function toggleRun(){
   if(!running){
-    running=true;
-    runPaused=false;
+    running=true; runPaused=false;
     document.getElementById('run-btn').textContent='⏸ Pausar';
     document.getElementById('stop-btn').style.display='flex';
     document.getElementById('map-placeholder').style.display='none';
@@ -496,19 +473,24 @@ function toggleRun(){
     initCanvas();
     runInterval=setInterval(()=>{if(!runPaused){runSeconds++;updateRunUI();}},1000);
     if(navigator.geolocation){
-      watchId=navigator.geolocation.watchPosition(pos=>{
-        const p={lat:pos.coords.latitude,lon:pos.coords.longitude};
-        if(lastPos) totalDist+=haversine(lastPos,p);
-        lastPos=p;
-        points.push(p);
-        updateRunUI();
-        drawRoute();
-      },err=>{
-        console.warn('GPS error:',err.message);
-        simulateGPS();
-      },{enableHighAccuracy:true,maximumAge:2000,timeout:10000});
+      watchId=navigator.geolocation.watchPosition(
+        pos=>{
+          const p={lat:pos.coords.latitude,lon:pos.coords.longitude};
+          const t=Date.now();
+          if(lastPos) totalDist+=haversine(lastPos,p);
+          lastPos=p;
+          points.push(p);
+          timestamps.push(t);
+          updateRunUI();
+          drawRoute();
+        },
+        err=>{
+          console.warn('GPS:',err.message);
+          if(!simInterval) simulateGPS();
+        },
+        {enableHighAccuracy:true,maximumAge:2000,timeout:10000}
+      );
     } else {
-      // Simulate for demo
       simulateGPS();
     }
   } else if(!runPaused){
@@ -526,15 +508,17 @@ function toggleRun(){
 
 let simInterval=null;
 function simulateGPS(){
-  let lat=-12.0966+Math.random()*.001,lon=-77.0344+Math.random()*.001;
+  let lat=-12.0966+Math.random()*.001, lon=-77.0344+Math.random()*.001;
   simInterval=setInterval(()=>{
     if(runPaused) return;
-    lat+=(.00002-.00001*Math.random());
-    lon+=(.00003-.00001*Math.random());
+    lat+=(.00002+Math.random()*.00003);
+    lon+=(.00003+Math.random()*.00002);
     const p={lat,lon};
+    const t=Date.now();
     if(lastPos) totalDist+=haversine(lastPos,p);
     lastPos=p;
     points.push(p);
+    timestamps.push(t);
     updateRunUI();
     drawRoute();
   },1500);
@@ -544,30 +528,62 @@ function stopRun(){
   if(!running) return;
   clearInterval(runInterval);
   clearInterval(simInterval);
+  simInterval=null;
   if(watchId) navigator.geolocation.clearWatch(watchId);
-  running=false;runPaused=false;
+  watchId=null;
+  running=false; runPaused=false;
   document.getElementById('run-btn').textContent='▶ Iniciar';
   document.getElementById('stop-btn').style.display='none';
   document.getElementById('run-status-pill').className='status-pill';
   document.getElementById('run-status-text').textContent='En pausa';
-  if(runSeconds>60){
-    saveRun(runSeconds,totalDist,points.slice());
+  if(runSeconds>30){
+    saveRun(runSeconds,totalDist,points.slice(),timestamps.slice());
     alert('¡Carrera guardada! '+totalDist.toFixed(2)+' km en '+fmtTime(runSeconds)+' 🎉');
   }
-  // Reset
-  runSeconds=0;totalDist=0;lastPos=null;points=[];watchId=null;
+  runSeconds=0; totalDist=0; lastPos=null; points=[]; timestamps=[];
   updateRunUI();
   document.getElementById('map-placeholder').style.display='flex';
   if(ctx) ctx.clearRect(0,0,canvasW,canvasH);
   goTo('history');
 }
 
-// STORAGE
-function saveRun(sec,dist,pts){
+// ─── STORAGE ─────────────────────────────────────────────
+function saveRun(sec,dist,pts,tss){
   const runs=getRuns();
-  runs.unshift({date:new Date().toISOString(),sec,dist:parseFloat(dist.toFixed(2)),pts:pts.length});
+  // Build km segments
+  const segments=buildSegments(pts,tss,sec);
+  runs.unshift({
+    date:new Date().toISOString(),
+    sec,
+    dist:parseFloat(dist.toFixed(3)),
+    pts:pts.length,
+    segments,
+    // store compressed points (every 5th)
+    route:pts.filter((_,i)=>i%5===0).map(p=>({lat:+p.lat.toFixed(6),lon:+p.lon.toFixed(6)}))
+  });
   localStorage.setItem('runflow_runs',JSON.stringify(runs.slice(0,50)));
   updateHomeStats();
+}
+
+// Build per-km segment data
+function buildSegments(pts,tss,totalSec){
+  if(!pts||pts.length<2) return [];
+  const segs=[];
+  let segStart=0, segDist=0, segStartTime=tss[0]||0;
+  for(let i=1;i<pts.length;i++){
+    segDist+=haversine(pts[i-1],pts[i]);
+    if(segDist>=1){
+      const segSec=tss[i]?(tss[i]-segStartTime)/1000:0;
+      segs.push({km:segs.length+1,dist:parseFloat(segDist.toFixed(3)),sec:Math.round(segSec)});
+      segDist=0; segStartTime=tss[i]||0; segStart=i;
+    }
+  }
+  // Last partial segment
+  if(segDist>0.05){
+    const segSec=tss[tss.length-1]?(tss[tss.length-1]-segStartTime)/1000:0;
+    segs.push({km:segs.length+1,dist:parseFloat(segDist.toFixed(3)),sec:Math.round(segSec),partial:true});
+  }
+  return segs;
 }
 
 function getRuns(){
@@ -583,18 +599,19 @@ function updateHomeStats(){
     const r=runs[0];
     const d=new Date(r.date);
     document.getElementById('home-last-run').innerHTML=`
-      <div class="run-item">
+      <div class="run-item" onclick="openDetail(0)">
         <div class="run-item-icon">🏃</div>
         <div class="run-item-info">
           <div class="run-item-date">Última: ${d.toLocaleDateString('es-PE',{weekday:'short',day:'numeric',month:'short'})}</div>
           <div class="run-item-stats">${r.dist.toFixed(2)} km · ${fmtTime(r.sec)}</div>
         </div>
-        <span class="run-item-badge badge-green">✓</span>
+        <span class="run-item-badge badge-green">→</span>
       </div>`;
-    document.getElementById('hero-msg').textContent = runs.length<3?'¡Vas muy bien! Sigue así':'¡Eres constante! 🔥 '+runs.length+' carreras';
+    document.getElementById('hero-msg').textContent=runs.length<3?'¡Vas muy bien! Sigue así':'¡Eres constante! 🔥 '+runs.length+' carreras';
   }
 }
 
+// ─── HISTORY ─────────────────────────────────────────────
 function renderHistory(){
   const runs=getRuns();
   const list=document.getElementById('history-list');
@@ -606,27 +623,95 @@ function renderHistory(){
   }
   const totalKm=runs.reduce((a,r)=>a+r.dist,0);
   const totalSec=runs.reduce((a,r)=>a+r.sec,0);
+  const avgPace=totalKm>0?totalSec/totalKm:0;
   totals.innerHTML=`
     <div class="total-banner">
       <div><div class="val">${totalKm.toFixed(1)}</div><div class="lbl">km totales</div></div>
       <div><div class="val">${runs.length}</div><div class="lbl">carreras</div></div>
-      <div><div class="val">${fmtTime(Math.round(totalSec/runs.length))}</div><div class="lbl">prom. tiempo</div></div>
+      <div><div class="val">${fmtPace(avgPace)}</div><div class="lbl">ritmo prom.</div></div>
     </div>`;
   list.innerHTML=runs.map((r,i)=>{
     const d=new Date(r.date);
+    const pace=r.dist>0?fmtPace(r.sec/r.dist):'--:--';
     const badge=i===0?'<span class="run-item-badge badge-green">Última</span>':r.dist>3?'<span class="run-item-badge badge-purple">🔥 PR</span>':'';
-    return `<div class="run-item">
+    return `<div class="run-item" onclick="openDetail(${i})">
       <div class="run-item-icon">🏃</div>
       <div class="run-item-info">
         <div class="run-item-date">${d.toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long'})}</div>
-        <div class="run-item-stats">${r.dist.toFixed(2)} km · ${fmtTime(r.sec)}</div>
+        <div class="run-item-stats">${r.dist.toFixed(2)} km · ${fmtTime(r.sec)} · ${pace} min/km</div>
       </div>
       ${badge}
     </div>`;
   }).join('');
 }
 
-// NAVIGATION
+// ─── RUN DETAIL ──────────────────────────────────────────
+function openDetail(idx){
+  const runs=getRuns();
+  const r=runs[idx];
+  if(!r) return;
+  const d=new Date(r.date);
+  document.getElementById('detail-date').textContent=d.toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  const pace=r.dist>0?fmtPace(r.sec/r.dist):'--:--';
+  const speed=r.sec>0?(r.dist/(r.sec/3600)).toFixed(1):'-';
+  document.getElementById('detail-stats').innerHTML=`
+    <div class="detail-stat"><div class="val">${r.dist.toFixed(2)}</div><div class="lbl">Kilómetros</div></div>
+    <div class="detail-stat"><div class="val">${fmtTime(r.sec)}</div><div class="lbl">Tiempo total</div></div>
+    <div class="detail-stat"><div class="val">${pace}</div><div class="lbl">Ritmo min/km</div></div>
+    <div class="detail-stat"><div class="val">${speed}</div><div class="lbl">Vel. km/h</div></div>`;
+
+  // Draw route on detail canvas
+  const wrap=document.getElementById('detail-map-wrap');
+  const dc=document.getElementById('detail-canvas');
+  const w=wrap.offsetWidth||320;
+  const h=200;
+  dc.width=w; dc.height=h;
+  dc.style.width='100%'; dc.style.height='100%';
+  const dctx=dc.getContext('2d');
+  if(r.route&&r.route.length>1){
+    drawRouteOnCtx(dctx,r.route,w,h);
+  } else {
+    dctx.fillStyle='#0d1117';dctx.fillRect(0,0,w,h);
+    dctx.fillStyle='#5a5a7a';dctx.font='14px Syne';dctx.textAlign='center';
+    dctx.fillText('Ruta no disponible',w/2,h/2);
+  }
+
+  // Segments
+  const segsEl=document.getElementById('detail-segments');
+  if(!r.segments||r.segments.length===0){
+    segsEl.innerHTML=`<div style="color:var(--muted);font-size:13px;padding:12px 0">No hay datos por kilómetro para esta carrera.</div>`;
+  } else {
+    const fastestSec=Math.min(...r.segments.map(s=>s.dist>0?s.sec/s.dist:Infinity));
+    segsEl.innerHTML=r.segments.map(seg=>{
+      const secPerKm=seg.dist>0?seg.sec/seg.dist:0;
+      const paceStr=fmtPace(secPerKm);
+      const speedStr=seg.sec>0?(seg.dist/(seg.sec/3600)).toFixed(1):'-';
+      // Bar width relative to fastest
+      const barPct=fastestSec>0?Math.min(100,Math.round((fastestSec/secPerKm)*100)):50;
+      const label=seg.partial?`Km ${seg.km} (parcial ${(seg.dist*1000).toFixed(0)}m)`:`Km ${seg.km}`;
+      return `<div class="seg-row">
+        <div class="seg-num">${seg.km}</div>
+        <div style="flex:1">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${label}</div>
+          <div class="seg-bar-wrap"><div class="seg-bar" style="width:${barPct}%"></div></div>
+        </div>
+        <div style="text-align:right;min-width:100px">
+          <div class="seg-info">${paceStr} <span style="font-size:10px;color:var(--muted)">min/km</span></div>
+          <div class="seg-pace">${speedStr} km/h</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('detail-modal').classList.add('open');
+}
+
+function closeDetail(){
+  document.getElementById('detail-modal').classList.remove('open');
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────
 function goTo(screen){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -637,7 +722,7 @@ function goTo(screen){
   if(screen==='home') updateHomeStats();
 }
 
-// INIT
+// ─── INIT ────────────────────────────────────────────────
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
