@@ -3,157 +3,142 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#080810">
+<meta name="theme-color" content="#0a0a0f">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="RunFlow">
 <title>RunFlow</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Rajdhani:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#080810;
-  --surface:#0f0f1c;
-  --surface2:#161626;
-  --border:#22223a;
-  --accent:#00e5a0;
-  --accent2:#7c6cfa;
-  --danger:#ff5f6d;
-  --text:#f0f0f8;
-  --muted:#5a5a7a;
-  --card-r:18px;
+  --bg:#0f0608;
+  --surface:#1a0b0e;
+  --surface2:#240d11;
+  --border:#3d1820;
+  --border2:#5c2530;
+  --accent:#e8c84a;
+  --accent2:#c0392b;
+  --red:#8b1a1a;
+  --red-bright:#c0392b;
+  --danger:#ff4444;
+  --text:#f5ede8;
+  --muted:#7a5a60;
+  --card-r:6px;
   --safe-top:env(safe-area-inset-top,0px);
   --safe-bot:env(safe-area-inset-bottom,0px);
 }
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overflow:hidden}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;overflow:hidden}
 #app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto}
 
 /* NAV */
-#bottom-nav{display:flex;background:var(--surface);border-top:1px solid var(--border);padding-bottom:calc(var(--safe-bot) + 4px);flex-shrink:0;position:relative;z-index:20}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;border:none;background:none;color:var(--muted);font-family:'Syne',sans-serif;font-size:10px;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:color .2s}
+#bottom-nav{display:flex;background:var(--surface);border-top:2px solid var(--border2);padding-bottom:calc(var(--safe-bot) + 4px);flex-shrink:0}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 0;border:none;background:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:color .2s}
 .nav-btn.active{color:var(--accent)}
-.nav-icon{font-size:22px;line-height:1}
+.nav-btn.active .nav-icon{text-shadow:0 0 12px rgba(232,200,74,.4)}
+.nav-icon{font-size:20px;line-height:1}
 
 /* SCREENS */
 #screens{flex:1;overflow:hidden;position:relative}
 .screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;display:none;padding:0 0 16px}
 .screen.active{display:block}
-.screen-inner{padding:0 20px 20px}
+.screen-inner{padding:0 16px 20px}
 
 /* HEADER */
-.screen-header{padding:calc(var(--safe-top) + 20px) 20px 16px;position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px solid var(--border)}
-.screen-header h1{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.screen-header{padding:calc(var(--safe-top) + 16px) 16px 12px;position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:2px solid var(--border2)}
+.screen-header h1{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;line-height:1}
 .screen-header span{color:var(--accent)}
 
 /* HOME */
-.hero{background:linear-gradient(135deg,var(--surface2),var(--surface));border:1px solid var(--border);border-radius:var(--card-r);padding:24px;margin:16px 0;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(0,229,160,.15),transparent 70%);pointer-events:none}
-.hero-label{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;margin-bottom:8px}
-.hero-title{font-size:22px;font-weight:800;line-height:1.2;margin-bottom:6px}
-.hero-sub{font-size:13px;color:var(--muted);line-height:1.5}
-.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
-.stat-val{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--accent);margin-bottom:4px}
-.stat-lbl{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.hero{background:var(--surface);border:1px solid var(--border2);border-left:4px solid var(--red-bright);border-radius:var(--card-r);padding:20px;margin:14px 0;position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}
+.hero::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 18px 18px 0;border-color:transparent var(--border2) transparent transparent}
+.hero-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;line-height:1.1;margin-bottom:6px;text-transform:uppercase}
+.hero-sub{font-size:14px;color:var(--muted);line-height:1.4;font-weight:500}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.stat-card{background:var(--surface);border:1px solid var(--border2);border-top:3px solid var(--red-bright);border-radius:var(--card-r);padding:14px;text-align:center}
+.stat-val{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;color:var(--accent);margin-bottom:4px;letter-spacing:-.02em}
+.stat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.12em;text-transform:uppercase}
 
 /* BUTTONS */
-.btn{width:100%;padding:16px;border:none;border-radius:14px;font-family:'Syne',sans-serif;font-size:16px;font-weight:700;letter-spacing:.02em;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:10px}
-.btn-primary{background:var(--accent);color:#000}
-.btn-primary:active{transform:scale(.97);background:#00c98d}
-.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn{width:100%;padding:14px 20px;border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:10px;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+.btn-primary{background:var(--accent);color:#1a0b0e}
+.btn-primary:active{transform:scale(.97);opacity:.9}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border2)}
 .btn-secondary:active{transform:scale(.97)}
-.btn-danger{background:var(--danger);color:#fff}
+.btn-danger{background:var(--red-bright);color:#fff}
 .btn-danger:active{transform:scale(.97)}
 
 /* SECTION TITLE */
-.sec-title{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:20px 0 10px}
+.sec-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px;border-left:3px solid var(--red-bright);padding-left:8px}
 
 /* WARMUP */
-.warmup-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
-.ex-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-.ex-card.done{border-color:var(--accent);background:rgba(0,229,160,.08)}
-.ex-card.done::after{content:'✓';position:absolute;top:10px;right:12px;color:var(--accent);font-size:16px;font-weight:800}
-.ex-icon{font-size:28px;margin-bottom:8px}
-.ex-name{font-size:14px;font-weight:700;margin-bottom:2px}
-.ex-time{font-size:12px;color:var(--muted)}
-.progress-bar-wrap{background:var(--surface);border-radius:99px;height:6px;margin:16px 0;overflow:hidden}
-.progress-bar{height:100%;background:var(--accent);border-radius:99px;transition:width .5s}
+.warmup-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.ex-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:14px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+.ex-card:active{transform:scale(.97)}
+.ex-card.done{border-color:var(--accent);border-top:2px solid var(--accent);background:rgba(232,200,74,.07)}
+.ex-card.done::after{content:'✓';position:absolute;top:8px;right:10px;color:var(--accent);font-size:14px;font-weight:800;font-family:'Barlow Condensed',sans-serif}
+.ex-icon{font-size:26px;margin-bottom:6px}
+.ex-svg{width:52px;height:62px;margin-bottom:6px}
+.ex-svg svg{width:100%;height:100%}
+.ex-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;margin-bottom:2px}
+.ex-time{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.08em}
+.progress-bar-wrap{background:var(--surface);border-radius:0;height:4px;margin:14px 0;overflow:hidden}
+.progress-bar{height:100%;background:var(--accent);border-radius:0;transition:width .5s}
 
 /* TIMER MODAL */
-#timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;display:none}
+#timer-modal{position:fixed;inset:0;background:rgba(8,2,3,.95);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;display:none}
 #timer-modal.open{display:flex}
-.timer-ex-name{font-size:18px;font-weight:700;color:var(--muted);text-align:center}
+.timer-ex-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center}
 .timer-display{font-family:'Space Mono',monospace;font-size:80px;font-weight:700;color:var(--accent);line-height:1;letter-spacing:-.03em}
-.timer-circle{width:180px;height:180px;position:relative;margin:10px auto}
+.timer-circle{width:180px;height:180px;position:relative;margin:6px auto}
 .timer-circle svg{transform:rotate(-90deg)}
 .timer-circle .track{fill:none;stroke:var(--surface2);stroke-width:8}
-.timer-circle .fill{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .9s linear}
+.timer-circle .fill{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:square;transition:stroke-dashoffset .9s linear}
 .timer-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
-.timer-close{position:absolute;top:calc(var(--safe-top) + 16px);right:20px;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:8px 16px;color:var(--muted);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.timer-close{position:absolute;top:calc(var(--safe-top) + 16px);right:16px;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:7px 14px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
 
 /* RUN */
-#map-container{width:100%;height:240px;background:var(--surface2);position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+#map-container{width:100%;height:230px;background:var(--surface2);position:relative;overflow:hidden;border-bottom:2px solid var(--border2)}
 #route-canvas{width:100%;height:100%}
-.map-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:13px}
+.map-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
 .map-placeholder .big{font-size:40px}
-.run-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border)}
-.run-stat{background:var(--surface);padding:16px 8px;text-align:center}
+.run-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border2);border-top:2px solid var(--border2)}
+.run-stat{background:var(--surface);padding:14px 8px;text-align:center}
 .run-stat-val{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--text)}
-.run-stat-lbl{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
-.run-controls{padding:16px 20px;display:flex;gap:12px}
-.run-status{padding:10px 20px}
-.status-pill{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--muted)}
-.status-pill.running{color:var(--accent);border-color:rgba(0,229,160,.4)}
-.status-pill .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.run-stat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-top:3px}
+.run-controls{padding:14px 16px;display:flex;gap:10px}
+.run-status{padding:8px 16px}
+.status-pill{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border2);border-radius:3px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.status-pill.running{color:var(--accent);border-color:rgba(232,200,74,.4)}
+.status-pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
 .status-pill.running .dot{animation:pulse 1.2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
 
 /* HISTORY */
-.run-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .2s}
-.run-item:active{border-color:var(--accent2)}
-.run-item-icon{width:44px;height:44px;border-radius:12px;background:rgba(0,229,160,.12);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.run-item{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red-bright);border-radius:4px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.run-item-icon{width:42px;height:42px;border-radius:4px;background:rgba(192,57,43,.15);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .run-item-info{flex:1;min-width:0}
-.run-item-date{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:3px}
-.run-item-stats{font-family:'Space Mono',monospace;font-size:15px;font-weight:700}
-.run-item-badge{font-size:11px;padding:4px 10px;border-radius:99px;font-weight:700;flex-shrink:0}
-.badge-green{background:rgba(0,229,160,.15);color:var(--accent)}
-.badge-purple{background:rgba(124,108,250,.15);color:var(--accent2)}
+.run-item-date{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.run-item-stats{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--text)}
+.run-item-badge{font-family:'Barlow Condensed',sans-serif;font-size:11px;padding:3px 8px;border-radius:3px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.badge-green{background:rgba(232,200,74,.12);color:var(--accent);border:1px solid rgba(232,200,74,.3)}
+.badge-purple{background:rgba(192,57,43,.15);color:var(--red-bright);border:1px solid rgba(192,57,43,.3)}
 .empty-state{text-align:center;padding:48px 20px;color:var(--muted)}
 .empty-state .big{font-size:48px;margin-bottom:12px}
-.empty-state p{font-size:14px;line-height:1.6}
-.total-banner{background:linear-gradient(135deg,rgba(0,229,160,.08),rgba(124,108,250,.08));border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;gap:8px}
+.empty-state p{font-family:'Barlow Condensed',sans-serif;font-size:16px;line-height:1.5;letter-spacing:.03em;font-weight:500}
+.total-banner{background:var(--surface);border:1px solid var(--border2);border-top:3px solid var(--accent);border-radius:4px;padding:14px;margin-bottom:14px;display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;gap:8px}
 .total-banner .val{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent)}
-.total-banner .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-top:2px}
-
-/* RUN DETAIL MODAL */
-#detail-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;display:none;flex-direction:column;overflow-y:auto}
-#detail-modal.open{display:flex}
-.detail-header{padding:calc(var(--safe-top) + 16px) 20px 16px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:5}
-.detail-back{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:8px 16px;color:var(--muted);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
-.detail-title{font-size:18px;font-weight:800;flex:1}
-.detail-body{padding:20px}
-.detail-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-.detail-stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
-.detail-stat .val{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--accent);margin-bottom:4px}
-.detail-stat .lbl{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
-.detail-map{width:100%;height:200px;background:var(--surface2);border-radius:14px;margin-bottom:20px;overflow:hidden;position:relative}
-.detail-map canvas{width:100%;height:100%}
-.seg-title{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-.seg-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
-.seg-row:last-child{border-bottom:none}
-.seg-num{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);width:28px;flex-shrink:0}
-.seg-bar-wrap{flex:1;background:var(--surface2);border-radius:99px;height:6px;overflow:hidden}
-.seg-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
-.seg-info{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;min-width:70px}
-.seg-pace{font-size:11px;color:var(--muted);text-align:right;min-width:55px}
+.total-banner .lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-top:2px}
 
 .mt12{margin-top:12px}
-.mt16{margin-top:16px}
-.gap12{display:flex;flex-direction:column;gap:12px}
+.mt16{margin-top:14px}
+.gap12{display:flex;flex-direction:column;gap:10px}
+
+/* Scrollbar hidden */
 .screen::-webkit-scrollbar{display:none}
 </style>
 </head>
@@ -164,14 +149,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
     <!-- HOME -->
     <div class="screen active" id="screen-home">
       <div class="screen-header">
-        <h1>Run<span>Flow</span></h1>
+        <h1>RUN<span>FLOW</span></h1>
       </div>
       <div class="screen-inner">
         <div class="hero">
-          <div class="hero-label">⚡ Bienvenido, corredor</div>
+          <div class="hero-label">Bienvenido, corredor</div>
           <div class="hero-title" id="hero-msg">¿Listo para tu primera carrera?</div>
           <div class="hero-sub">Empieza con el calentamiento para preparar tu cuerpo y evitar lesiones.</div>
         </div>
+
         <div class="stats-row">
           <div class="stat-card">
             <div class="stat-val" id="home-total-km">0.0</div>
@@ -182,26 +168,47 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
             <div class="stat-lbl">carreras</div>
           </div>
         </div>
+
         <div class="gap12">
-          <button class="btn btn-primary" onclick="goTo('warmup')">🔥 Iniciar calentamiento</button>
-          <button class="btn btn-secondary" onclick="goTo('run')">▶ Ir directo a correr</button>
+          <button class="btn btn-primary" onclick="goTo('warmup')">
+            Iniciar calentamiento
+          </button>
+          <button class="btn btn-secondary" onclick="goTo('run')">
+            Ir directo a correr
+          </button>
         </div>
+
         <div class="sec-title">Última actividad</div>
         <div id="home-last-run">
-          <div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">Aún no tienes carreras. ¡Anímate! 💪</div>
+          <div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">
+            Aún no tienes carreras. Puedes lograrlo.
+          </div>
         </div>
       </div>
     </div>
 
     <!-- WARMUP -->
     <div class="screen" id="screen-warmup">
-      <div class="screen-header"><h1>🔥 Calenta<span>miento</span></h1></div>
+      <div class="screen-header">
+        <h1>CALENTA<span>MIENTO</span></h1>
+      </div>
       <div class="screen-inner">
-        <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:8px">Completa todos los ejercicios antes de correr. Toca cada uno para iniciar el temporizador.</div>
-        <div class="progress-bar-wrap mt16"><div class="progress-bar" id="warmup-progress" style="width:0%"></div></div>
-        <div style="font-size:12px;color:var(--muted);text-align:right;margin-top:4px"><span id="warmup-count">0</span>/6 ejercicios</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:8px">
+          Completa todos los ejercicios antes de correr. Toca cada uno para iniciar el temporizador.
+        </div>
+
+        <div class="progress-bar-wrap mt16">
+          <div class="progress-bar" id="warmup-progress" style="width:0%"></div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);text-align:right;margin-top:4px">
+          <span id="warmup-count">0</span>/6 ejercicios
+        </div>
+
         <div class="warmup-grid" id="warmup-grid"></div>
-        <button class="btn btn-primary mt16" id="warmup-done-btn" onclick="finishWarmup()" style="display:none">✓ Calentamiento completo — ¡A correr!</button>
+
+        <button class="btn btn-primary mt16" id="warmup-done-btn" onclick="finishWarmup()" style="display:none">
+          Calentamiento completo — A correr
+        </button>
       </div>
     </div>
 
@@ -210,16 +217,20 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
       <div id="map-container">
         <canvas id="route-canvas"></canvas>
         <div class="map-placeholder" id="map-placeholder">
-          <div class="big">🗺️</div>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3d1820" stroke-width="1.5" stroke-linecap="square" style="margin-bottom:6px">
+            <path d="M9 3L3 6v15l6-3 6 3 6-3V3l-6 3-6-3z"/><path d="M9 3v15M15 6v15"/>
+          </svg>
           <div>El mapa aparece al iniciar</div>
         </div>
       </div>
+
       <div class="run-status">
         <div class="status-pill" id="run-status-pill">
           <div class="dot"></div>
           <span id="run-status-text">En pausa</span>
         </div>
       </div>
+
       <div class="run-stats">
         <div class="run-stat">
           <div class="run-stat-val" id="run-time">00:00</div>
@@ -231,26 +242,36 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
         </div>
         <div class="run-stat">
           <div class="run-stat-val" id="run-pace">--:--</div>
-          <div class="run-stat-lbl">min/km</div>
+          <div class="run-stat-lbl">Ritmo/km</div>
         </div>
       </div>
+
       <div class="run-controls">
-        <button class="btn btn-primary" id="run-btn" onclick="toggleRun()" style="flex:2">▶ Iniciar</button>
-        <button class="btn btn-danger" id="stop-btn" onclick="stopRun()" style="flex:1;display:none">■ Fin</button>
+        <button class="btn btn-primary" id="run-btn" onclick="toggleRun()" style="flex:2">
+          Iniciar
+        </button>
+        <button class="btn btn-danger" id="stop-btn" onclick="stopRun()" style="flex:1;display:none">
+          ■ Fin
+        </button>
       </div>
+
       <div class="screen-inner" style="padding-top:0">
         <div class="sec-title">Consejos para principiantes</div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px">
-          <div style="font-size:13px;line-height:1.6;color:var(--muted)">💡 <strong style="color:var(--text)">Técnica run/walk:</strong> Alterna 1 min corriendo + 2 min caminando.</div>
-          <div style="font-size:13px;line-height:1.6;color:var(--muted)">🫁 <strong style="color:var(--text)">Ritmo conversacional:</strong> Si no puedes hablar, ve más despacio.</div>
-          <div style="font-size:13px;line-height:1.6;color:var(--muted)">🎯 <strong style="color:var(--text)">Meta de hoy:</strong> 20 minutos de movimiento continuo.</div>
+        <div style="background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:14px;display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:14px;line-height:1.5;color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:500"><strong style="color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.04em;font-size:15px">TÉCNICA RUN/WALK:</strong> Alterna 1 min corriendo + 2 min caminando. Es la mejor forma de empezar sin agotarte.</div>
+          <div style="height:1px;background:var(--border)"></div>
+          <div style="font-size:14px;line-height:1.5;color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:500"><strong style="color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.04em;font-size:15px">RITMO CONVERSACIONAL:</strong> Deberías poder hablar mientras corres. Si no puedes, ve más despacio.</div>
+          <div style="height:1px;background:var(--border)"></div>
+          <div style="font-size:14px;line-height:1.5;color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:500"><strong style="color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.04em;font-size:15px">META DE HOY:</strong> 20 minutos de movimiento continuo, no importa la velocidad.</div>
         </div>
       </div>
     </div>
 
     <!-- HISTORY -->
     <div class="screen" id="screen-history">
-      <div class="screen-header"><h1>Historial <span>&</span> Progreso</h1></div>
+      <div class="screen-header">
+        <h1>HISTORIAL <span>&</span> PROGRESO</h1>
+      </div>
       <div class="screen-inner">
         <div id="history-totals"></div>
         <div id="history-list"></div>
@@ -260,10 +281,38 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
   </div>
 
   <nav id="bottom-nav">
-    <button class="nav-btn active" onclick="goTo('home')" id="nav-home"><div class="nav-icon">🏠</div>Inicio</button>
-    <button class="nav-btn" onclick="goTo('warmup')" id="nav-warmup"><div class="nav-icon">🔥</div>Calentar</button>
-    <button class="nav-btn" onclick="goTo('run')" id="nav-run"><div class="nav-icon">▶</div>Correr</button>
-    <button class="nav-btn" onclick="goTo('history')" id="nav-history"><div class="nav-icon">📊</div>Historial</button>
+    <button class="nav-btn active" onclick="goTo('home')" id="nav-home">
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+          <path d="M3 12L12 4l9 8"/><path d="M5 10v9h4v-5h6v5h4v-9"/>
+        </svg>
+      </div>
+      Inicio
+    </button>
+    <button class="nav-btn" onclick="goTo('warmup')" id="nav-warmup">
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/>
+        </svg>
+      </div>
+      Calentar
+    </button>
+    <button class="nav-btn" onclick="goTo('run')" id="nav-run">
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+          <circle cx="13" cy="4" r="2"/><path d="M7 22l4-8 3 3 2-5"/><path d="M17 22l-2-4"/><path d="M6 12l2-5 3 3 2-3h3"/>
+        </svg>
+      </div>
+      Correr
+    </button>
+    <button class="nav-btn" onclick="goTo('history')" id="nav-history">
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+          <rect x="3" y="3" width="18" height="18"/><path d="M8 17V13M12 17V9M16 17v-4"/>
+        </svg>
+      </div>
+      Historial
+    </button>
   </nav>
 </div>
 
@@ -271,95 +320,192 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
 <div id="timer-modal">
   <button class="timer-close" onclick="closeTimer()">✕ Saltar</button>
   <div class="timer-ex-name" id="timer-ex-name"></div>
-  <div class="timer-circle">
-    <svg width="180" height="180" viewBox="0 0 180 180">
-      <circle class="track" cx="90" cy="90" r="80"/>
-      <circle class="fill" cx="90" cy="90" r="80" id="timer-arc" stroke-dasharray="502" stroke-dashoffset="0"/>
-    </svg>
-    <div class="timer-center">
-      <div class="timer-display" id="timer-num">0</div>
-      <div style="font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.08em">SEG</div>
+  <div style="display:flex;align-items:center;gap:16px;width:100%;max-width:340px;padding:0 20px">
+    <div id="timer-svg-wrap" style="width:110px;height:130px;flex-shrink:0;background:var(--surface2);border:1px solid var(--border2);border-top:3px solid var(--accent);padding:8px;display:flex;align-items:center;justify-content:center"></div>
+    <div class="timer-circle" style="margin:0;flex-shrink:0">
+      <svg width="140" height="140" viewBox="0 0 180 180">
+        <circle class="track" cx="90" cy="90" r="80"/>
+        <circle class="fill" cx="90" cy="90" r="80" id="timer-arc"
+          stroke-dasharray="502" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-center">
+        <div class="timer-display" id="timer-num">0</div>
+        <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.1em;font-family:'Barlow Condensed',sans-serif">SEG</div>
+      </div>
     </div>
   </div>
-  <div id="timer-tip" style="font-size:13px;color:var(--muted);text-align:center;max-width:260px;line-height:1.6;padding:0 20px"></div>
-  <button class="btn btn-primary" id="timer-next-btn" style="display:none;width:220px" onclick="closeTimer()">¡Listo! Siguiente →</button>
-</div>
-
-<!-- RUN DETAIL MODAL -->
-<div id="detail-modal">
-  <div class="detail-header">
-    <button class="detail-back" onclick="closeDetail()">← Volver</button>
-    <div class="detail-title" id="detail-date"></div>
-  </div>
-  <div class="detail-body">
-    <div class="detail-stat-grid" id="detail-stats"></div>
-    <div class="detail-map" id="detail-map-wrap">
-      <canvas id="detail-canvas"></canvas>
-    </div>
-    <div class="seg-title">Análisis por kilómetro</div>
-    <div id="detail-segments"></div>
-  </div>
+  <div id="timer-tip" style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:500;color:var(--muted);text-align:center;max-width:300px;line-height:1.5;padding:0 20px"></div>
+  <button class="btn btn-primary" id="timer-next-btn" style="display:none;width:240px" onclick="closeTimer()">
+    Listo — Siguiente
+  </button>
 </div>
 
 <script>
-// ─── WARMUP ───────────────────────────────────────────────
 const EXERCISES = [
-  {icon:'🦵',name:'Movilidad de cadera',sec:30,tip:'Círculos lentos con la cadera, 15 hacia cada lado.'},
-  {icon:'🦶',name:'Elevación de rodillas',sec:30,tip:'Marcha en el lugar levantando las rodillas hasta la cadera.'},
-  {icon:'🏃',name:'Talones al glúteo',sec:30,tip:'Corre en el lugar llevando los talones hacia los glúteos.'},
-  {icon:'💃',name:'Zancadas laterales',sec:20,tip:'3 pasos a la derecha, luego 3 a la izquierda.'},
-  {icon:'🙆',name:'Rotación de tronco',sec:20,tip:'Gira el torso de lado a lado con los brazos extendidos.'},
-  {icon:'🌊',name:'Ondulación de brazos',sec:20,tip:'Mueve los brazos en el patrón de carrera, exagera el movimiento.'},
+  {
+    name:'Movilidad de cadera',sec:30,
+    tip:'Círculos lentos con la cadera, 15 hacia cada lado. Rodillas ligeramente flexionadas.',
+    svg:`<svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="18" r="10" stroke="#e8c84a" stroke-width="2.5"/>
+      <line x1="60" y1="28" x2="60" y2="65" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="45" x2="40" y2="58" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="45" x2="80" y2="58" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="65" x2="45" y2="100" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="65" x2="75" y2="100" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="45" y1="100" x2="38" y2="125" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="75" y1="100" x2="82" y2="125" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <ellipse cx="60" cy="65" rx="22" ry="14" stroke="#e8c84a" stroke-width="1.5" stroke-dasharray="4 3" fill="none"/>
+      <path d="M38 65 Q30 52 38 51" stroke="#c0392b" stroke-width="1.5" fill="none" stroke-linecap="square"/>
+      <path d="M82 65 Q90 52 82 51" stroke="#c0392b" stroke-width="1.5" fill="none" stroke-linecap="square"/>
+    </svg>`
+  },
+  {
+    name:'Elevación de rodillas',sec:30,
+    tip:'Marcha en el lugar levantando las rodillas hasta la altura de la cadera. Ritmo moderado.',
+    svg:`<svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="18" r="10" stroke="#e8c84a" stroke-width="2.5"/>
+      <line x1="60" y1="28" x2="60" y2="68" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="42" x2="40" y2="55" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="42" x2="78" y2="62" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="40" y1="55" x2="36" y2="72" stroke="#f5ede8" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <line x1="60" y1="68" x2="48" y2="105" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="48" y1="105" x2="40" y2="128" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="68" x2="60" y2="90" stroke="#e8c84a" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="90" x2="76" y2="90" stroke="#e8c84a" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="76" y1="90" x2="76" y2="128" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="22" y1="90" x2="76" y2="90" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="14" y="94" fill="#c0392b" font-size="8" font-family="monospace">—</text>
+    </svg>`
+  },
+  {
+    name:'Talones al glúteo',sec:30,
+    tip:'Corre en el lugar llevando los talones hacia los glúteos. Mantén el torso erguido.',
+    svg:`<svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="55" cy="18" r="10" stroke="#e8c84a" stroke-width="2.5"/>
+      <line x1="55" y1="28" x2="55" y2="68" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="55" y1="42" x2="35" y2="52" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="55" y1="42" x2="72" y2="55" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="55" y1="68" x2="42" y2="98" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="42" y1="98" x2="35" y2="125" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="55" y1="68" x2="62" y2="95" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="62" y1="95" x2="56" y2="75" stroke="#e8c84a" stroke-width="2.5" stroke-linecap="square"/>
+      <path d="M62 95 Q70 100 65 115 Q60 128 55 125" stroke="#e8c84a" stroke-width="2" fill="none"/>
+      <path d="M42 98 L55 68" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2" fill="none"/>
+    </svg>`
+  },
+  {
+    name:'Zancadas laterales',sec:20,
+    tip:'Da 3 pasos a la derecha, luego 3 a la izquierda. Puntas de los pies al frente.',
+    svg:`<svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="16" r="9" stroke="#e8c84a" stroke-width="2.5"/>
+      <line x1="60" y1="25" x2="60" y2="60" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="38" x2="38" y2="50" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="38" x2="82" y2="50" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="60" x2="30" y2="95" stroke="#e8c84a" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="30" y1="95" x2="18" y2="128" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="60" x2="90" y2="72" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="90" y1="72" x2="100" y2="128" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <path d="M18 128 L100 128" stroke="#c0392b" stroke-width="1" stroke-dasharray="5 3"/>
+      <path d="M20 110 L14 104 L20 98" stroke="#c0392b" stroke-width="1.5" fill="none" stroke-linecap="square"/>
+      <path d="M100 110 L106 104 L100 98" stroke="#c0392b" stroke-width="1.5" fill="none" stroke-linecap="square"/>
+    </svg>`
+  },
+  {
+    name:'Rotación de tronco',sec:20,
+    tip:'Pies al ancho de hombros, gira el torso de lado a lado con los brazos extendidos.',
+    svg:`<svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="16" r="9" stroke="#e8c84a" stroke-width="2.5"/>
+      <line x1="60" y1="25" x2="60" y2="65" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="65" x2="44" y2="102" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="65" x2="76" y2="102" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="44" y1="102" x2="38" y2="128" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="76" y1="102" x2="82" y2="128" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="22" y1="40" x2="60" y2="42" stroke="#e8c84a" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="42" x2="96" y2="46" stroke="#c0392b" stroke-width="2" stroke-dasharray="5 3" stroke-linecap="square"/>
+      <circle cx="22" cy="40" r="3" fill="#e8c84a"/>
+      <circle cx="96" cy="46" r="3" fill="#c0392b"/>
+      <path d="M75 30 Q85 38 80 48" stroke="#c0392b" stroke-width="1.5" fill="none" stroke-linecap="square"/>
+      <path d="M80 48 L75 46 L82 43" stroke="#c0392b" stroke-width="1.5" fill="none" stroke-linecap="square"/>
+    </svg>`
+  },
+  {
+    name:'Braceo de carrera',sec:20,
+    tip:'Mueve los brazos en el patrón de la carrera, exagerando el movimiento. Relaja los hombros.',
+    svg:`<svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="16" r="9" stroke="#e8c84a" stroke-width="2.5"/>
+      <line x1="60" y1="25" x2="60" y2="68" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="68" x2="46" y2="104" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="68" x2="74" y2="104" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="46" y1="104" x2="40" y2="128" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="74" y1="104" x2="80" y2="128" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="36" x2="28" y2="52" stroke="#e8c84a" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="28" y1="52" x2="22" y2="72" stroke="#e8c84a" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="60" y1="36" x2="90" y2="28" stroke="#c0392b" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="90" y1="28" x2="100" y2="45" stroke="#c0392b" stroke-width="2.5" stroke-linecap="square"/>
+      <path d="M28 52 Q18 42 22 32" stroke="#e8c84a" stroke-width="1" stroke-dasharray="3 2" fill="none"/>
+      <path d="M90 28 Q100 18 96 8" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2" fill="none"/>
+    </svg>`
+  },
 ];
 
-let completedEx=new Set(), timerInterval=null, currentExIdx=null;
+let completedEx = new Set();
+let timerInterval = null;
+let currentExIdx = null;
 
 function initWarmup(){
-  const grid=document.getElementById('warmup-grid');
-  grid.innerHTML='';
+  const grid = document.getElementById('warmup-grid');
+  grid.innerHTML = '';
   EXERCISES.forEach((ex,i)=>{
-    const card=document.createElement('div');
-    card.className='ex-card'+(completedEx.has(i)?' done':'');
-    card.id='ex-'+i;
-    card.onclick=()=>startTimer(i);
-    card.innerHTML=`<div class="ex-icon">${ex.icon}</div><div class="ex-name">${ex.name}</div><div class="ex-time">${ex.sec} seg</div>`;
+    const card = document.createElement('div');
+    card.className = 'ex-card' + (completedEx.has(i)?' done':'');
+    card.id = 'ex-'+i;
+    card.onclick = ()=>startTimer(i);
+    card.innerHTML = `<div class="ex-svg">${ex.svg}</div><div class="ex-name">${ex.name}</div><div class="ex-time">${ex.sec} seg</div>`;
     grid.appendChild(card);
   });
   updateWarmupProgress();
 }
 
 function updateWarmupProgress(){
-  const pct=(completedEx.size/EXERCISES.length)*100;
-  document.getElementById('warmup-progress').style.width=pct+'%';
-  document.getElementById('warmup-count').textContent=completedEx.size;
-  document.getElementById('warmup-done-btn').style.display=completedEx.size===EXERCISES.length?'flex':'none';
+  const pct = (completedEx.size/EXERCISES.length)*100;
+  document.getElementById('warmup-progress').style.width = pct+'%';
+  document.getElementById('warmup-count').textContent = completedEx.size;
+  document.getElementById('warmup-done-btn').style.display = completedEx.size===EXERCISES.length?'flex':'none';
 }
 
 function startTimer(idx){
-  currentExIdx=idx;
-  const ex=EXERCISES[idx];
-  document.getElementById('timer-ex-name').textContent=ex.name;
-  document.getElementById('timer-tip').textContent=ex.tip;
+  currentExIdx = idx;
+  const ex = EXERCISES[idx];
+  document.getElementById('timer-ex-name').textContent = ex.name;
+  document.getElementById('timer-tip').textContent = ex.tip;
+  document.getElementById('timer-svg-wrap').innerHTML = ex.svg;
   document.getElementById('timer-next-btn').style.display='none';
   document.getElementById('timer-modal').classList.add('open');
-  let sec=ex.sec;
-  const total=ex.sec;
-  const arc=document.getElementById('timer-arc');
-  const circ=502;
+  let sec = ex.sec;
+  const total = ex.sec;
+  const arc = document.getElementById('timer-arc');
+  const circ = 502;
   function tick(){
-    document.getElementById('timer-num').textContent=sec;
-    arc.style.strokeDashoffset=circ*(1-sec/total);
-    if(sec<=0){clearInterval(timerInterval);markDone(idx);document.getElementById('timer-num').textContent='✓';document.getElementById('timer-next-btn').style.display='flex';return;}
+    document.getElementById('timer-num').textContent = sec;
+    const offset = circ * (1 - sec/total);
+    arc.style.strokeDashoffset = offset;
+    if(sec <= 0){
+      clearInterval(timerInterval);
+      markDone(idx);
+      document.getElementById('timer-num').textContent = '✓';
+      document.getElementById('timer-next-btn').style.display='flex';
+      return;
+    }
     sec--;
   }
   tick();
-  timerInterval=setInterval(tick,1000);
+  timerInterval = setInterval(tick,1000);
 }
 
 function markDone(idx){
   completedEx.add(idx);
-  const card=document.getElementById('ex-'+idx);
-  if(card) card.className='ex-card done';
+  const card = document.getElementById('ex-'+idx);
+  if(card) card.className = 'ex-card done';
   updateWarmupProgress();
 }
 
@@ -367,24 +513,29 @@ function closeTimer(){
   clearInterval(timerInterval);
   document.getElementById('timer-modal').classList.remove('open');
   if(currentExIdx!==null) markDone(currentExIdx);
-  currentExIdx=null;
+  currentExIdx = null;
 }
 
 function finishWarmup(){goTo('run');}
 
-// ─── RUN TRACKING ────────────────────────────────────────
-let running=false, runPaused=false, runSeconds=0;
-let runInterval=null, watchId=null;
-let points=[], timestamps=[], totalDist=0, lastPos=null;
+// RUN TRACKING
+let running = false;
+let runPaused = false;
+let runSeconds = 0;
+let runInterval = null;
+let watchId = null;
+let points = [];
+let totalDist = 0;
+let lastPos = null;
 let canvas, ctx, canvasW, canvasH;
 
 function initCanvas(){
-  canvas=document.getElementById('route-canvas');
-  canvasW=canvas.offsetWidth;
-  canvasH=canvas.offsetHeight;
-  canvas.width=canvasW;
-  canvas.height=canvasH;
-  ctx=canvas.getContext('2d');
+  canvas = document.getElementById('route-canvas');
+  canvasW = canvas.offsetWidth;
+  canvasH = canvas.offsetHeight;
+  canvas.width = canvasW;
+  canvas.height = canvasH;
+  ctx = canvas.getContext('2d');
 }
 
 function haversine(a,b){
@@ -395,68 +546,67 @@ function haversine(a,b){
   return R*2*Math.atan2(Math.sqrt(s),Math.sqrt(1-s));
 }
 
-// Format pace as MM:SS per km (e.g. 6:30)
-function fmtPace(secPerKm){
-  if(!isFinite(secPerKm)||secPerKm<=0||secPerKm>3600) return '--:--';
-  const m=Math.floor(secPerKm/60);
-  const s=Math.round(secPerKm%60);
-  return m+':'+(s<10?'0':'')+s;
-}
-
-// Format time as MM:SS
-function fmtTime(totalSec){
-  const s=Math.round(totalSec);
-  const m=Math.floor(s/60);
-  const sec=s%60;
-  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
-}
-
-function drawRouteOnCtx(c,pts,w,h){
-  c.clearRect(0,0,w,h);
-  c.fillStyle='#0d1117';
-  c.fillRect(0,0,w,h);
-  c.strokeStyle='rgba(255,255,255,.04)';
-  c.lineWidth=1;
-  for(let x=0;x<w;x+=40){c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke();}
-  for(let y=0;y<h;y+=40){c.beginPath();c.moveTo(0,y);c.lineTo(w,y);c.stroke();}
-  if(!pts||pts.length<1) return;
-  if(pts.length<2){
-    c.beginPath();c.arc(w/2,h/2,8,0,Math.PI*2);
-    c.fillStyle='#00e5a0';c.fill();
+function drawRoute(){
+  if(!ctx||points.length<1) return;
+  ctx.clearRect(0,0,canvasW,canvasH);
+  // Background
+  ctx.fillStyle='#0d1117';
+  ctx.fillRect(0,0,canvasW,canvasH);
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,.04)';
+  ctx.lineWidth=1;
+  for(let x=0;x<canvasW;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvasH);ctx.stroke();}
+  for(let y=0;y<canvasH;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvasW,y);ctx.stroke();}
+  if(points.length<2){
+    // Just draw dot
+    const p=points[0];
+    ctx.beginPath();ctx.arc(canvasW/2,canvasH/2,8,0,Math.PI*2);
+    ctx.fillStyle='#00e5a0';ctx.fill();
     return;
   }
+  // Normalize
   let minLat=Infinity,maxLat=-Infinity,minLon=Infinity,maxLon=-Infinity;
-  pts.forEach(p=>{minLat=Math.min(minLat,p.lat);maxLat=Math.max(maxLat,p.lat);minLon=Math.min(minLon,p.lon);maxLon=Math.max(maxLon,p.lon);});
+  points.forEach(p=>{minLat=Math.min(minLat,p.lat);maxLat=Math.max(maxLat,p.lat);minLon=Math.min(minLon,p.lon);maxLon=Math.max(maxLon,p.lon);});
   const pad=40;
-  const scaleX=(w-pad*2)/Math.max(maxLon-minLon,.0001);
-  const scaleY=(h-pad*2)/Math.max(maxLat-minLat,.0001);
+  const scaleX=(canvasW-pad*2)/Math.max(maxLon-minLon,.0001);
+  const scaleY=(canvasH-pad*2)/Math.max(maxLat-minLat,.0001);
   const toX=lon=>pad+(lon-minLon)*scaleX;
-  const toY=lat=>h-pad-(lat-minLat)*scaleY;
-  c.beginPath();c.moveTo(toX(pts[0].lon),toY(pts[0].lat));
-  pts.forEach(p=>c.lineTo(toX(p.lon),toY(p.lat)));
-  c.strokeStyle='rgba(0,229,160,.2)';c.lineWidth=8;c.lineCap='round';c.lineJoin='round';c.stroke();
-  c.beginPath();c.moveTo(toX(pts[0].lon),toY(pts[0].lat));
-  pts.forEach(p=>c.lineTo(toX(p.lon),toY(p.lat)));
-  c.strokeStyle='#00e5a0';c.lineWidth=3;c.stroke();
-  const last=pts[pts.length-1];
-  c.beginPath();c.arc(toX(last.lon),toY(last.lat),8,0,Math.PI*2);c.fillStyle='#00e5a0';c.fill();
-  c.beginPath();c.arc(toX(last.lon),toY(last.lat),14,0,Math.PI*2);c.strokeStyle='rgba(0,229,160,.3)';c.lineWidth=3;c.stroke();
-  const first=pts[0];
-  c.beginPath();c.arc(toX(first.lon),toY(first.lat),5,0,Math.PI*2);c.fillStyle='#7c6cfa';c.fill();
+  const toY=lat=>canvasH-pad-(lat-minLat)*scaleY;
+  // Route
+  ctx.beginPath();
+  ctx.moveTo(toX(points[0].lon),toY(points[0].lat));
+  points.forEach(p=>ctx.lineTo(toX(p.lon),toY(p.lat)));
+  ctx.strokeStyle='#00e5a0';ctx.lineWidth=3;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();
+  // Glow
+  ctx.beginPath();
+  ctx.moveTo(toX(points[0].lon),toY(points[0].lat));
+  points.forEach(p=>ctx.lineTo(toX(p.lon),toY(p.lat)));
+  ctx.strokeStyle='rgba(0,229,160,.2)';ctx.lineWidth=8;ctx.stroke();
+  // Current pos
+  const last=points[points.length-1];
+  ctx.beginPath();ctx.arc(toX(last.lon),toY(last.lat),8,0,Math.PI*2);
+  ctx.fillStyle='#00e5a0';ctx.fill();
+  ctx.beginPath();ctx.arc(toX(last.lon),toY(last.lat),14,0,Math.PI*2);
+  ctx.strokeStyle='rgba(0,229,160,.3)';ctx.lineWidth=3;ctx.stroke();
+  // Start
+  const first=points[0];
+  ctx.beginPath();ctx.arc(toX(first.lon),toY(first.lat),5,0,Math.PI*2);
+  ctx.fillStyle='#7c6cfa';ctx.fill();
 }
 
-function drawRoute(){
-  if(!ctx) return;
-  drawRouteOnCtx(ctx,points,canvasW,canvasH);
+function fmtTime(s){
+  const m=Math.floor(s/60),sec=s%60;
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
 }
 
 function updateRunUI(){
   document.getElementById('run-time').textContent=fmtTime(runSeconds);
   document.getElementById('run-dist').textContent=totalDist.toFixed(2);
-  if(runSeconds>0&&totalDist>0.01){
-    // pace = seconds per km
-    const secPerKm=runSeconds/totalDist;
-    document.getElementById('run-pace').textContent=fmtPace(secPerKm);
+  if(runSeconds>0&&totalDist>0){
+    const paceMin=runSeconds/60/totalDist;
+    const pm=Math.floor(paceMin);
+    const ps=Math.round((paceMin-pm)*60);
+    document.getElementById('run-pace').textContent=pm+':'+(ps<10?'0':'')+ps;
   } else {
     document.getElementById('run-pace').textContent='--:--';
   }
@@ -464,7 +614,8 @@ function updateRunUI(){
 
 function toggleRun(){
   if(!running){
-    running=true; runPaused=false;
+    running=true;
+    runPaused=false;
     document.getElementById('run-btn').textContent='⏸ Pausar';
     document.getElementById('stop-btn').style.display='flex';
     document.getElementById('map-placeholder').style.display='none';
@@ -474,19 +625,17 @@ function toggleRun(){
     runInterval=setInterval(()=>{if(!runPaused){runSeconds++;updateRunUI();}},1000);
     if(navigator.geolocation){
       watchId=navigator.geolocation.watchPosition(
-        pos=>{
+        function(pos){
           const p={lat:pos.coords.latitude,lon:pos.coords.longitude};
-          const t=Date.now();
           if(lastPos) totalDist+=haversine(lastPos,p);
           lastPos=p;
           points.push(p);
-          timestamps.push(t);
           updateRunUI();
           drawRoute();
         },
-        err=>{
-          console.warn('GPS:',err.message);
-          if(!simInterval) simulateGPS();
+        function(err){
+          console.warn('GPS error ('+err.code+'): '+err.message);
+          simulateGPS();
         },
         {enableHighAccuracy:true,maximumAge:2000,timeout:10000}
       );
@@ -495,7 +644,7 @@ function toggleRun(){
     }
   } else if(!runPaused){
     runPaused=true;
-    document.getElementById('run-btn').textContent='▶ Continuar';
+    document.getElementById('run-btn').textContent='Continuar';
     document.getElementById('run-status-pill').className='status-pill';
     document.getElementById('run-status-text').textContent='Pausado';
   } else {
@@ -508,17 +657,15 @@ function toggleRun(){
 
 let simInterval=null;
 function simulateGPS(){
-  let lat=-12.0966+Math.random()*.001, lon=-77.0344+Math.random()*.001;
+  let lat=-12.0966+Math.random()*.001,lon=-77.0344+Math.random()*.001;
   simInterval=setInterval(()=>{
     if(runPaused) return;
-    lat+=(.00002+Math.random()*.00003);
-    lon+=(.00003+Math.random()*.00002);
+    lat+=(.00002-.00001*Math.random());
+    lon+=(.00003-.00001*Math.random());
     const p={lat,lon};
-    const t=Date.now();
     if(lastPos) totalDist+=haversine(lastPos,p);
     lastPos=p;
     points.push(p);
-    timestamps.push(t);
     updateRunUI();
     drawRoute();
   },1500);
@@ -528,62 +675,30 @@ function stopRun(){
   if(!running) return;
   clearInterval(runInterval);
   clearInterval(simInterval);
-  simInterval=null;
   if(watchId) navigator.geolocation.clearWatch(watchId);
-  watchId=null;
-  running=false; runPaused=false;
-  document.getElementById('run-btn').textContent='▶ Iniciar';
+  running=false;runPaused=false;
+  document.getElementById('run-btn').textContent='Iniciar';
   document.getElementById('stop-btn').style.display='none';
   document.getElementById('run-status-pill').className='status-pill';
   document.getElementById('run-status-text').textContent='En pausa';
-  if(runSeconds>30){
-    saveRun(runSeconds,totalDist,points.slice(),timestamps.slice());
+  if(runSeconds>60){
+    saveRun(runSeconds,totalDist,points.slice());
     alert('¡Carrera guardada! '+totalDist.toFixed(2)+' km en '+fmtTime(runSeconds)+' 🎉');
   }
-  runSeconds=0; totalDist=0; lastPos=null; points=[]; timestamps=[];
+  // Reset
+  runSeconds=0;totalDist=0;lastPos=null;points=[];watchId=null;
   updateRunUI();
   document.getElementById('map-placeholder').style.display='flex';
   if(ctx) ctx.clearRect(0,0,canvasW,canvasH);
   goTo('history');
 }
 
-// ─── STORAGE ─────────────────────────────────────────────
-function saveRun(sec,dist,pts,tss){
+// STORAGE
+function saveRun(sec,dist,pts){
   const runs=getRuns();
-  // Build km segments
-  const segments=buildSegments(pts,tss,sec);
-  runs.unshift({
-    date:new Date().toISOString(),
-    sec,
-    dist:parseFloat(dist.toFixed(3)),
-    pts:pts.length,
-    segments,
-    // store compressed points (every 5th)
-    route:pts.filter((_,i)=>i%5===0).map(p=>({lat:+p.lat.toFixed(6),lon:+p.lon.toFixed(6)}))
-  });
+  runs.unshift({date:new Date().toISOString(),sec,dist:parseFloat(dist.toFixed(2)),pts:pts.length});
   localStorage.setItem('runflow_runs',JSON.stringify(runs.slice(0,50)));
   updateHomeStats();
-}
-
-// Build per-km segment data
-function buildSegments(pts,tss,totalSec){
-  if(!pts||pts.length<2) return [];
-  const segs=[];
-  let segStart=0, segDist=0, segStartTime=tss[0]||0;
-  for(let i=1;i<pts.length;i++){
-    segDist+=haversine(pts[i-1],pts[i]);
-    if(segDist>=1){
-      const segSec=tss[i]?(tss[i]-segStartTime)/1000:0;
-      segs.push({km:segs.length+1,dist:parseFloat(segDist.toFixed(3)),sec:Math.round(segSec)});
-      segDist=0; segStartTime=tss[i]||0; segStart=i;
-    }
-  }
-  // Last partial segment
-  if(segDist>0.05){
-    const segSec=tss[tss.length-1]?(tss[tss.length-1]-segStartTime)/1000:0;
-    segs.push({km:segs.length+1,dist:parseFloat(segDist.toFixed(3)),sec:Math.round(segSec),partial:true});
-  }
-  return segs;
 }
 
 function getRuns(){
@@ -599,119 +714,58 @@ function updateHomeStats(){
     const r=runs[0];
     const d=new Date(r.date);
     document.getElementById('home-last-run').innerHTML=`
-      <div class="run-item" onclick="openDetail(0)">
-        <div class="run-item-icon">🏃</div>
+      <div class="run-item">
+        <div class="run-item-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="square">
+            <circle cx="13" cy="4" r="2"/><path d="M7 22l4-8 3 3 2-5"/><path d="M17 22l-2-4"/><path d="M6 12l2-5 3 3 2-3h3"/>
+          </svg>
+        </div>
         <div class="run-item-info">
           <div class="run-item-date">Última: ${d.toLocaleDateString('es-PE',{weekday:'short',day:'numeric',month:'short'})}</div>
           <div class="run-item-stats">${r.dist.toFixed(2)} km · ${fmtTime(r.sec)}</div>
         </div>
-        <span class="run-item-badge badge-green">→</span>
+        <span class="run-item-badge badge-green">✓</span>
       </div>`;
-    document.getElementById('hero-msg').textContent=runs.length<3?'¡Vas muy bien! Sigue así':'¡Eres constante! 🔥 '+runs.length+' carreras';
+    document.getElementById('hero-msg').textContent = runs.length<3?'¡Vas muy bien! Sigue así':'Constante: '+runs.length+' carreras';
   }
 }
 
-// ─── HISTORY ─────────────────────────────────────────────
 function renderHistory(){
   const runs=getRuns();
   const list=document.getElementById('history-list');
   const totals=document.getElementById('history-totals');
   if(runs.length===0){
     totals.innerHTML='';
-    list.innerHTML=`<div class="empty-state"><div class="big">🏃</div><p>Aún no tienes carreras guardadas.<br>¡Completa tu primera sesión!</p></div>`;
+    list.innerHTML=`<div class="empty-state"><div class="big"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#3d1820" stroke-width="1.5" stroke-linecap="square"><circle cx="13" cy="4" r="2"/><path d="M7 22l4-8 3 3 2-5"/><path d="M17 22l-2-4"/><path d="M6 12l2-5 3 3 2-3h3"/></svg></div><p>Aún no tienes carreras guardadas.<br>¡Completa tu primera sesión!</p></div>`;
     return;
   }
   const totalKm=runs.reduce((a,r)=>a+r.dist,0);
   const totalSec=runs.reduce((a,r)=>a+r.sec,0);
-  const avgPace=totalKm>0?totalSec/totalKm:0;
   totals.innerHTML=`
     <div class="total-banner">
       <div><div class="val">${totalKm.toFixed(1)}</div><div class="lbl">km totales</div></div>
       <div><div class="val">${runs.length}</div><div class="lbl">carreras</div></div>
-      <div><div class="val">${fmtPace(avgPace)}</div><div class="lbl">ritmo prom.</div></div>
+      <div><div class="val">${fmtTime(Math.round(totalSec/runs.length))}</div><div class="lbl">prom. tiempo</div></div>
     </div>`;
   list.innerHTML=runs.map((r,i)=>{
     const d=new Date(r.date);
-    const pace=r.dist>0?fmtPace(r.sec/r.dist):'--:--';
-    const badge=i===0?'<span class="run-item-badge badge-green">Última</span>':r.dist>3?'<span class="run-item-badge badge-purple">🔥 PR</span>':'';
-    return `<div class="run-item" onclick="openDetail(${i})">
-      <div class="run-item-icon">🏃</div>
+    const badge=i===0?'<span class="run-item-badge badge-green">Última</span>':r.dist>3?'<span class="run-item-badge badge-purple">PR</span>':'';
+    return `<div class="run-item">
+      <div class="run-item-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="square">
+          <circle cx="13" cy="4" r="2"/><path d="M7 22l4-8 3 3 2-5"/><path d="M17 22l-2-4"/><path d="M6 12l2-5 3 3 2-3h3"/>
+        </svg>
+      </div>
       <div class="run-item-info">
         <div class="run-item-date">${d.toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long'})}</div>
-        <div class="run-item-stats">${r.dist.toFixed(2)} km · ${fmtTime(r.sec)} · ${pace} min/km</div>
+        <div class="run-item-stats">${r.dist.toFixed(2)} km · ${fmtTime(r.sec)}</div>
       </div>
       ${badge}
     </div>`;
   }).join('');
 }
 
-// ─── RUN DETAIL ──────────────────────────────────────────
-function openDetail(idx){
-  const runs=getRuns();
-  const r=runs[idx];
-  if(!r) return;
-  const d=new Date(r.date);
-  document.getElementById('detail-date').textContent=d.toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-
-  const pace=r.dist>0?fmtPace(r.sec/r.dist):'--:--';
-  const speed=r.sec>0?(r.dist/(r.sec/3600)).toFixed(1):'-';
-  document.getElementById('detail-stats').innerHTML=`
-    <div class="detail-stat"><div class="val">${r.dist.toFixed(2)}</div><div class="lbl">Kilómetros</div></div>
-    <div class="detail-stat"><div class="val">${fmtTime(r.sec)}</div><div class="lbl">Tiempo total</div></div>
-    <div class="detail-stat"><div class="val">${pace}</div><div class="lbl">Ritmo min/km</div></div>
-    <div class="detail-stat"><div class="val">${speed}</div><div class="lbl">Vel. km/h</div></div>`;
-
-  // Draw route on detail canvas
-  const wrap=document.getElementById('detail-map-wrap');
-  const dc=document.getElementById('detail-canvas');
-  const w=wrap.offsetWidth||320;
-  const h=200;
-  dc.width=w; dc.height=h;
-  dc.style.width='100%'; dc.style.height='100%';
-  const dctx=dc.getContext('2d');
-  if(r.route&&r.route.length>1){
-    drawRouteOnCtx(dctx,r.route,w,h);
-  } else {
-    dctx.fillStyle='#0d1117';dctx.fillRect(0,0,w,h);
-    dctx.fillStyle='#5a5a7a';dctx.font='14px Syne';dctx.textAlign='center';
-    dctx.fillText('Ruta no disponible',w/2,h/2);
-  }
-
-  // Segments
-  const segsEl=document.getElementById('detail-segments');
-  if(!r.segments||r.segments.length===0){
-    segsEl.innerHTML=`<div style="color:var(--muted);font-size:13px;padding:12px 0">No hay datos por kilómetro para esta carrera.</div>`;
-  } else {
-    const fastestSec=Math.min(...r.segments.map(s=>s.dist>0?s.sec/s.dist:Infinity));
-    segsEl.innerHTML=r.segments.map(seg=>{
-      const secPerKm=seg.dist>0?seg.sec/seg.dist:0;
-      const paceStr=fmtPace(secPerKm);
-      const speedStr=seg.sec>0?(seg.dist/(seg.sec/3600)).toFixed(1):'-';
-      // Bar width relative to fastest
-      const barPct=fastestSec>0?Math.min(100,Math.round((fastestSec/secPerKm)*100)):50;
-      const label=seg.partial?`Km ${seg.km} (parcial ${(seg.dist*1000).toFixed(0)}m)`:`Km ${seg.km}`;
-      return `<div class="seg-row">
-        <div class="seg-num">${seg.km}</div>
-        <div style="flex:1">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${label}</div>
-          <div class="seg-bar-wrap"><div class="seg-bar" style="width:${barPct}%"></div></div>
-        </div>
-        <div style="text-align:right;min-width:100px">
-          <div class="seg-info">${paceStr} <span style="font-size:10px;color:var(--muted)">min/km</span></div>
-          <div class="seg-pace">${speedStr} km/h</div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  document.getElementById('detail-modal').classList.add('open');
-}
-
-function closeDetail(){
-  document.getElementById('detail-modal').classList.remove('open');
-}
-
-// ─── NAVIGATION ──────────────────────────────────────────
+// NAVIGATION
 function goTo(screen){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -722,7 +776,7 @@ function goTo(screen){
   if(screen==='home') updateHomeStats();
 }
 
-// ─── INIT ────────────────────────────────────────────────
+// INIT
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
