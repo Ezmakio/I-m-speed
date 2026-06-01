@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RunFlow">
+<title>RunFlow</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0a0f;
+  --surface:#12121a;
+  --surface2:#1a1a26;
+  --border:#2a2a40;
+  --accent:#00e5a0;
+  --accent2:#7c6cfa;
+  --danger:#ff5f6d;
+  --text:#f0f0f8;
+  --muted:#6b6b8a;
+  --card-r:18px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto}
+
+/* NAV */
+#bottom-nav{display:flex;background:var(--surface);border-top:1px solid var(--border);padding-bottom:calc(var(--safe-bot) + 4px);flex-shrink:0}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;border:none;background:none;color:var(--muted);font-family:'Syne',sans-serif;font-size:10px;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:color .2s}
+.nav-btn.active{color:var(--accent)}
+.nav-icon{font-size:22px;line-height:1}
+
+/* SCREENS */
+#screens{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;display:none;padding:0 0 16px}
+.screen.active{display:block}
+.screen-inner{padding:0 20px 20px}
+
+/* HEADER */
+.screen-header{padding:calc(var(--safe-top) + 20px) 20px 16px;position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px solid var(--border)}
+.screen-header h1{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.screen-header span{color:var(--accent)}
+
+/* HOME */
+.hero{background:linear-gradient(135deg,var(--surface2),var(--surface));border:1px solid var(--border);border-radius:var(--card-r);padding:24px;margin:16px 0;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(0,229,160,.15),transparent 70%);pointer-events:none}
+.hero-label{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;margin-bottom:8px}
+.hero-title{font-size:22px;font-weight:800;line-height:1.2;margin-bottom:6px}
+.hero-sub{font-size:13px;color:var(--muted);line-height:1.5}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
+.stat-val{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.stat-lbl{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+
+/* BUTTONS */
+.btn{width:100%;padding:16px;border:none;border-radius:14px;font-family:'Syne',sans-serif;font-size:16px;font-weight:700;letter-spacing:.02em;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-primary{background:var(--accent);color:#000}
+.btn-primary:active{transform:scale(.97);background:#00c98d}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:active{transform:scale(.97)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:active{transform:scale(.97)}
+
+/* SECTION TITLE */
+.sec-title{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:20px 0 10px}
+
+/* WARMUP */
+.warmup-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.ex-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.ex-card.done{border-color:var(--accent);background:rgba(0,229,160,.08)}
+.ex-card.done::after{content:'✓';position:absolute;top:10px;right:12px;color:var(--accent);font-size:16px;font-weight:800}
+.ex-icon{font-size:28px;margin-bottom:8px}
+.ex-name{font-size:14px;font-weight:700;margin-bottom:2px}
+.ex-time{font-size:12px;color:var(--muted)}
+.progress-bar-wrap{background:var(--surface);border-radius:99px;height:6px;margin:16px 0;overflow:hidden}
+.progress-bar{height:100%;background:var(--accent);border-radius:99px;transition:width .5s}
+
+/* TIMER MODAL */
+#timer-modal{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;display:none}
+#timer-modal.open{display:flex}
+.timer-ex-name{font-size:18px;font-weight:700;color:var(--muted);text-align:center}
+.timer-display{font-family:'Space Mono',monospace;font-size:80px;font-weight:700;color:var(--accent);line-height:1;letter-spacing:-.03em}
+.timer-circle{width:180px;height:180px;position:relative;margin:10px auto}
+.timer-circle svg{transform:rotate(-90deg)}
+.timer-circle .track{fill:none;stroke:var(--surface2);stroke-width:8}
+.timer-circle .fill{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .9s linear}
+.timer-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.timer-close{position:absolute;top:calc(var(--safe-top) + 16px);right:20px;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:8px 16px;color:var(--muted);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+
+/* RUN */
+#map-container{width:100%;height:240px;background:var(--surface2);position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+#route-canvas{width:100%;height:100%}
+.map-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:13px}
+.map-placeholder .big{font-size:40px}
+.run-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border)}
+.run-stat{background:var(--surface);padding:16px 8px;text-align:center}
+.run-stat-val{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--text)}
+.run-stat-lbl{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.run-controls{padding:16px 20px;display:flex;gap:12px}
+.run-status{padding:10px 20px}
+.status-pill{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--muted)}
+.status-pill.running{color:var(--accent);border-color:rgba(0,229,160,.4)}
+.status-pill .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.status-pill.running .dot{animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* HISTORY */
+.run-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px}
+.run-item-icon{width:44px;height:44px;border-radius:12px;background:rgba(0,229,160,.12);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.run-item-info{flex:1;min-width:0}
+.run-item-date{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:3px}
+.run-item-stats{font-family:'Space Mono',monospace;font-size:15px;font-weight:700}
+.run-item-badge{font-size:11px;padding:4px 10px;border-radius:99px;font-weight:700}
+.badge-green{background:rgba(0,229,160,.15);color:var(--accent)}
+.badge-purple{background:rgba(124,108,250,.15);color:var(--accent2)}
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty-state .big{font-size:48px;margin-bottom:12px}
+.empty-state p{font-size:14px;line-height:1.6}
+.total-banner{background:linear-gradient(135deg,rgba(0,229,160,.1),rgba(124,108,250,.1));border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;gap:8px}
+.total-banner .val{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent)}
+.total-banner .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-top:2px}
+
+.mt12{margin-top:12px}
+.mt16{margin-top:16px}
+.gap12{display:flex;flex-direction:column;gap:12px}
+
+/* Scrollbar hidden */
+.screen::-webkit-scrollbar{display:none}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="screens">
+
+    <!-- HOME -->
+    <div class="screen active" id="screen-home">
+      <div class="screen-header">
+        <h1>Run<span>Flow</span></h1>
+      </div>
+      <div class="screen-inner">
+        <div class="hero">
+          <div class="hero-label">🌅 Bienvenido, corredor</div>
+          <div class="hero-title" id="hero-msg">¿Listo para tu primera carrera?</div>
+          <div class="hero-sub">Empieza con el calentamiento para preparar tu cuerpo y evitar lesiones.</div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-val" id="home-total-km">0.0</div>
+            <div class="stat-lbl">km totales</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="home-total-runs">0</div>
+            <div class="stat-lbl">carreras</div>
+          </div>
+        </div>
+
+        <div class="gap12">
+          <button class="btn btn-primary" onclick="goTo('warmup')">
+            🔥 Iniciar calentamiento
+          </button>
+          <button class="btn btn-secondary" onclick="goTo('run')">
+            ▶ Ir directo a correr
+          </button>
+        </div>
+
+        <div class="sec-title">Última actividad</div>
+        <div id="home-last-run">
+          <div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">
+            Aún no tienes carreras. ¡Anímate! 💪
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WARMUP -->
+    <div class="screen" id="screen-warmup">
+      <div class="screen-header">
+        <h1>🔥 Calenta<span>miento</span></h1>
+      </div>
+      <div class="screen-inner">
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:8px">
+          Completa todos los ejercicios antes de correr. Toca cada uno para iniciar el temporizador.
+        </div>
+
+        <div class="progress-bar-wrap mt16">
+          <div class="progress-bar" id="warmup-progress" style="width:0%"></div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);text-align:right;margin-top:4px">
+          <span id="warmup-count">0</span>/6 ejercicios
+        </div>
+
+        <div class="warmup-grid" id="warmup-grid"></div>
+
+        <button class="btn btn-primary mt16" id="warmup-done-btn" onclick="finishWarmup()" style="display:none">
+          ✓ Calentamiento completo — ¡A correr!
+        </button>
+      </div>
+    </div>
+
+    <!-- RUN -->
+    <div class="screen" id="screen-run">
+      <div id="map-container">
+        <canvas id="route-canvas"></canvas>
+        <div class="map-placeholder" id="map-placeholder">
+          <div class="big">🗺️</div>
+          <div>El mapa aparece al iniciar</div>
+        </div>
+      </div>
+
+      <div class="run-status">
+        <div class="status-pill" id="run-status-pill">
+          <div class="dot"></div>
+          <span id="run-status-text">En pausa</span>
+        </div>
+      </div>
+
+      <div class="run-stats">
+        <div class="run-stat">
+          <div class="run-stat-val" id="run-time">00:00</div>
+          <div class="run-stat-lbl">Tiempo</div>
+        </div>
+        <div class="run-stat">
+          <div class="run-stat-val" id="run-dist">0.00</div>
+          <div class="run-stat-lbl">km</div>
+        </div>
+        <div class="run-stat">
+          <div class="run-stat-val" id="run-pace">--:--</div>
+          <div class="run-stat-lbl">Ritmo/km</div>
+        </div>
+      </div>
+
+      <div class="run-controls">
+        <button class="btn btn-primary" id="run-btn" onclick="toggleRun()" style="flex:2">
+          ▶ Iniciar
+        </button>
+        <button class="btn btn-danger" id="stop-btn" onclick="stopRun()" style="flex:1;display:none">
+          ■ Fin
+        </button>
+      </div>
+
+      <div class="screen-inner" style="padding-top:0">
+        <div class="sec-title">Consejos para principiantes</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:13px;line-height:1.6;color:var(--muted)">💡 <strong style="color:var(--text)">Técnica run/walk:</strong> Alterna 1 min corriendo + 2 min caminando. Es la mejor forma de empezar sin agotarte.</div>
+          <div style="font-size:13px;line-height:1.6;color:var(--muted)">🫁 <strong style="color:var(--text)">Ritmo conversacional:</strong> Deberías poder hablar mientras corres. Si no puedes, ve más despacio.</div>
+          <div style="font-size:13px;line-height:1.6;color:var(--muted)">🎯 <strong style="color:var(--text)">Meta de hoy:</strong> 20 minutos de movimiento continuo, no importa la velocidad.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="screen" id="screen-history">
+      <div class="screen-header">
+        <h1>Historial <span>&</span> Progreso</h1>
+      </div>
+      <div class="screen-inner">
+        <div id="history-totals"></div>
+        <div id="history-list"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <nav id="bottom-nav">
+    <button class="nav-btn active" onclick="goTo('home')" id="nav-home">
+      <div class="nav-icon">🏠</div>
+      Inicio
+    </button>
+    <button class="nav-btn" onclick="goTo('warmup')" id="nav-warmup">
+      <div class="nav-icon">🔥</div>
+      Calentar
+    </button>
+    <button class="nav-btn" onclick="goTo('run')" id="nav-run">
+      <div class="nav-icon">▶</div>
+      Correr
+    </button>
+    <button class="nav-btn" onclick="goTo('history')" id="nav-history">
+      <div class="nav-icon">📊</div>
+      Historial
+    </button>
+  </nav>
+</div>
+
+<!-- TIMER MODAL -->
+<div id="timer-modal">
+  <button class="timer-close" onclick="closeTimer()">✕ Saltar</button>
+  <div class="timer-ex-name" id="timer-ex-name"></div>
+  <div class="timer-circle">
+    <svg width="180" height="180" viewBox="0 0 180 180">
+      <circle class="track" cx="90" cy="90" r="80"/>
+      <circle class="fill" cx="90" cy="90" r="80" id="timer-arc"
+        stroke-dasharray="502" stroke-dashoffset="0"/>
+    </svg>
+    <div class="timer-center">
+      <div class="timer-display" id="timer-num">0</div>
+      <div style="font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.08em">SEG</div>
+    </div>
+  </div>
+  <div id="timer-tip" style="font-size:13px;color:var(--muted);text-align:center;max-width:260px;line-height:1.6;padding:0 20px"></div>
+  <button class="btn btn-primary" id="timer-next-btn" style="display:none;width:220px" onclick="closeTimer()">
+    ¡Listo! Siguiente →
+  </button>
+</div>
+
+<script>
+const EXERCISES = [
+  {icon:'🦵',name:'Movilidad de cadera',sec:30,tip:'Círculos lentos con la cadera, 15 hacia cada lado. Mantén las rodillas ligeramente flexionadas.'},
+  {icon:'🦶',name:'Elevación de rodillas',sec:30,tip:'Marcha en el lugar levantando las rodillas hasta la altura de la cadera. Ritmo moderado.'},
+  {icon:'🏃',name:'Talones al glúteo',sec:30,tip:'Corre en el lugar llevando los talones hacia los glúteos. Mantén el torso erguido.'},
+  {icon:'💃',name:'Zancadas laterales',sec:20,tip:'Da 3 pasos a la derecha, luego 3 a la izquierda. Mantén las puntas de los pies al frente.'},
+  {icon:'🙆',name:'Rotación de tronco',sec:20,tip:'Pies separados al ancho de hombros, gira el torso de lado a lado con los brazos extendidos.'},
+  {icon:'🌊',name:'Ondulación de brazos',sec:20,tip:'Mueve los brazos en el patrón de la carrera, exagerando el movimiento. Relaja los hombros.'},
+];
+
+let completedEx = new Set();
+let timerInterval = null;
+let currentExIdx = null;
+
+function initWarmup(){
+  const grid = document.getElementById('warmup-grid');
+  grid.innerHTML = '';
+  EXERCISES.forEach((ex,i)=>{
+    const card = document.createElement('div');
+    card.className = 'ex-card' + (completedEx.has(i)?' done':'');
+    card.id = 'ex-'+i;
+    card.onclick = ()=>startTimer(i);
+    card.innerHTML = `<div class="ex-icon">${ex.icon}</div><div class="ex-name">${ex.name}</div><div class="ex-time">${ex.sec} seg</div>`;
+    grid.appendChild(card);
+  });
+  updateWarmupProgress();
+}
+
+function updateWarmupProgress(){
+  const pct = (completedEx.size/EXERCISES.length)*100;
+  document.getElementById('warmup-progress').style.width = pct+'%';
+  document.getElementById('warmup-count').textContent = completedEx.size;
+  document.getElementById('warmup-done-btn').style.display = completedEx.size===EXERCISES.length?'flex':'none';
+}
+
+function startTimer(idx){
+  currentExIdx = idx;
+  const ex = EXERCISES[idx];
+  document.getElementById('timer-ex-name').textContent = ex.name;
+  document.getElementById('timer-tip').textContent = ex.tip;
+  document.getElementById('timer-next-btn').style.display='none';
+  document.getElementById('timer-modal').classList.add('open');
+  let sec = ex.sec;
+  const total = ex.sec;
+  const arc = document.getElementById('timer-arc');
+  const circ = 502;
+  function tick(){
+    document.getElementById('timer-num').textContent = sec;
+    const offset = circ * (1 - sec/total);
+    arc.style.strokeDashoffset = offset;
+    if(sec <= 0){
+      clearInterval(timerInterval);
+      markDone(idx);
+      document.getElementById('timer-num').textContent = '✓';
+      document.getElementById('timer-next-btn').style.display='flex';
+      return;
+    }
+    sec--;
+  }
+  tick();
+  timerInterval = setInterval(tick,1000);
+}
+
+function markDone(idx){
+  completedEx.add(idx);
+  const card = document.getElementById('ex-'+idx);
+  if(card) card.className = 'ex-card done';
+  updateWarmupProgress();
+}
+
+function closeTimer(){
+  clearInterval(timerInterval);
+  document.getElementById('timer-modal').classList.remove('open');
+  if(currentExIdx!==null) markDone(currentExIdx);
+  currentExIdx = null;
+}
+
+function finishWarmup(){goTo('run');}
+
+// RUN TRACKING
+let running = false;
+let runPaused = false;
+let runSeconds = 0;
+let runInterval = null;
+let watchId = null;
+let points = [];
+let totalDist = 0;
+let lastPos = null;
+let canvas, ctx, canvasW, canvasH;
+
+function initCanvas(){
+  canvas = document.getElementById('route-canvas');
+  canvasW = canvas.offsetWidth;
+  canvasH = canvas.offsetHeight;
+  canvas.width = canvasW;
+  canvas.height = canvasH;
+  ctx = canvas.getContext('2d');
+}
+
+function haversine(a,b){
+  const R=6371;
+  const dLat=(b.lat-a.lat)*Math.PI/180;
+  const dLon=(b.lon-a.lon)*Math.PI/180;
+  const s=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(s),Math.sqrt(1-s));
+}
+
+function drawRoute(){
+  if(!ctx||points.length<1) return;
+  ctx.clearRect(0,0,canvasW,canvasH);
+  // Background
+  ctx.fillStyle='#0d1117';
+  ctx.fillRect(0,0,canvasW,canvasH);
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,.04)';
+  ctx.lineWidth=1;
+  for(let x=0;x<canvasW;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvasH);ctx.stroke();}
+  for(let y=0;y<canvasH;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvasW,y);ctx.stroke();}
+  if(points.length<2){
+    // Just draw dot
+    const p=points[0];
+    ctx.beginPath();ctx.arc(canvasW/2,canvasH/2,8,0,Math.PI*2);
+    ctx.fillStyle='#00e5a0';ctx.fill();
+    return;
+  }
+  // Normalize
+  let minLat=Infinity,maxLat=-Infinity,minLon=Infinity,maxLon=-Infinity;
+  points.forEach(p=>{minLat=Math.min(minLat,p.lat);maxLat=Math.max(maxLat,p.lat);minLon=Math.min(minLon,p.lon);maxLon=Math.max(maxLon,p.lon);});
+  const pad=40;
+  const scaleX=(canvasW-pad*2)/Math.max(maxLon-minLon,.0001);
+  const scaleY=(canvasH-pad*2)/Math.max(maxLat-minLat,.0001);
+  const toX=lon=>pad+(lon-minLon)*scaleX;
+  const toY=lat=>canvasH-pad-(lat-minLat)*scaleY;
+  // Route
+  ctx.beginPath();
+  ctx.moveTo(toX(points[0].lon),toY(points[0].lat));
+  points.forEach(p=>ctx.lineTo(toX(p.lon),toY(p.lat)));
+  ctx.strokeStyle='#00e5a0';ctx.lineWidth=3;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();
+  // Glow
+  ctx.beginPath();
+  ctx.moveTo(toX(points[0].lon),toY(points[0].lat));
+  points.forEach(p=>ctx.lineTo(toX(p.lon),toY(p.lat)));
+  ctx.strokeStyle='rgba(0,229,160,.2)';ctx.lineWidth=8;ctx.stroke();
+  // Current pos
+  const last=points[points.length-1];
+  ctx.beginPath();ctx.arc(toX(last.lon),toY(last.lat),8,0,Math.PI*2);
+  ctx.fillStyle='#00e5a0';ctx.fill();
+  ctx.beginPath();ctx.arc(toX(last.lon),toY(last.lat),14,0,Math.PI*2);
+  ctx.strokeStyle='rgba(0,229,160,.3)';ctx.lineWidth=3;ctx.stroke();
+  // Start
+  const first=points[0];
+  ctx.beginPath();ctx.arc(toX(first.lon),toY(first.lat),5,0,Math.PI*2);
+  ctx.fillStyle='#7c6cfa';ctx.fill();
+}
+
+function fmtTime(s){
+  const m=Math.floor(s/60),sec=s%60;
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+
+function updateRunUI(){
+  document.getElementById('run-time').textContent=fmtTime(runSeconds);
+  document.getElementById('run-dist').textContent=totalDist.toFixed(2);
+  if(runSeconds>0&&totalDist>0){
+    const paceMin=runSeconds/60/totalDist;
+    const pm=Math.floor(paceMin);
+    const ps=Math.round((paceMin-pm)*60);
+    document.getElementById('run-pace').textContent=pm+':'+(ps<10?'0':'')+ps;
+  } else {
+    document.getElementById('run-pace').textContent='--:--';
+  }
+}
+
+function toggleRun(){
+  if(!running){
+    running=true;
+    runPaused=false;
+    document.getElementById('run-btn').textContent='⏸ Pausar';
+    document.getElementById('stop-btn').style.display='flex';
+    document.getElementById('map-placeholder').style.display='none';
+    document.getElementById('run-status-pill').className='status-pill running';
+    document.getElementById('run-status-text').textContent='Corriendo';
+    initCanvas();
+    runInterval=setInterval(()=>{if(!runPaused){runSeconds++;updateRunUI();}},1000);
+    if(navigator.geolocation){
+      watchId=navigator.geolocation.watchPosition(pos=>{
+        const p={lat:pos.coords.latitude,lon:pos.coords.longitude};
+        if(lastPos) totalDist+=haversine(lastPos,p);
+        lastPos=p;
+        points.push(p);
+        updateRunUI();
+        drawRoute();
+      },{enableHighAccuracy:true,maximumAge:2000,timeout:10000});
+    } else {
+      // Simulate for demo
+      simulateGPS();
+    }
+  } else if(!runPaused){
+    runPaused=true;
+    document.getElementById('run-btn').textContent='▶ Continuar';
+    document.getElementById('run-status-pill').className='status-pill';
+    document.getElementById('run-status-text').textContent='Pausado';
+  } else {
+    runPaused=false;
+    document.getElementById('run-btn').textContent='⏸ Pausar';
+    document.getElementById('run-status-pill').className='status-pill running';
+    document.getElementById('run-status-text').textContent='Corriendo';
+  }
+}
+
+let simInterval=null;
+function simulateGPS(){
+  let lat=-12.0966+Math.random()*.001,lon=-77.0344+Math.random()*.001;
+  simInterval=setInterval(()=>{
+    if(runPaused) return;
+    lat+=(.00002-.00001*Math.random());
+    lon+=(.00003-.00001*Math.random());
+    const p={lat,lon};
+    if(lastPos) totalDist+=haversine(lastPos,p);
+    lastPos=p;
+    points.push(p);
+    updateRunUI();
+    drawRoute();
+  },1500);
+}
+
+function stopRun(){
+  if(!running) return;
+  clearInterval(runInterval);
+  clearInterval(simInterval);
+  if(watchId) navigator.geolocation.clearWatch(watchId);
+  running=false;runPaused=false;
+  document.getElementById('run-btn').textContent='▶ Iniciar';
+  document.getElementById('stop-btn').style.display='none';
+  document.getElementById('run-status-pill').className='status-pill';
+  document.getElementById('run-status-text').textContent='En pausa';
+  if(runSeconds>60){
+    saveRun(runSeconds,totalDist,points.slice());
+    alert('¡Carrera guardada! '+totalDist.toFixed(2)+' km en '+fmtTime(runSeconds)+' 🎉');
+  }
+  // Reset
+  runSeconds=0;totalDist=0;lastPos=null;points=[];watchId=null;
+  updateRunUI();
+  document.getElementById('map-placeholder').style.display='flex';
+  if(ctx) ctx.clearRect(0,0,canvasW,canvasH);
+  goTo('history');
+}
+
+// STORAGE
+function saveRun(sec,dist,pts){
+  const runs=getRuns();
+  runs.unshift({date:new Date().toISOString(),sec,dist:parseFloat(dist.toFixed(2)),pts:pts.length});
+  localStorage.setItem('runflow_runs',JSON.stringify(runs.slice(0,50)));
+  updateHomeStats();
+}
+
+function getRuns(){
+  try{return JSON.parse(localStorage.getItem('runflow_runs')||'[]');}catch{return[];}
+}
+
+function updateHomeStats(){
+  const runs=getRuns();
+  const km=runs.reduce((a,r)=>a+r.dist,0);
+  document.getElementById('home-total-km').textContent=km.toFixed(1);
+  document.getElementById('home-total-runs').textContent=runs.length;
+  if(runs.length>0){
+    const r=runs[0];
+    const d=new Date(r.date);
+    document.getElementById('home-last-run').innerHTML=`
+      <div class="run-item">
+        <div class="run-item-icon">🏃</div>
+        <div class="run-item-info">
+          <div class="run-item-date">Última: ${d.toLocaleDateString('es-PE',{weekday:'short',day:'numeric',month:'short'})}</div>
+          <div class="run-item-stats">${r.dist.toFixed(2)} km · ${fmtTime(r.sec)}</div>
+        </div>
+        <span class="run-item-badge badge-green">✓</span>
+      </div>`;
+    document.getElementById('hero-msg').textContent = runs.length<3?'¡Vas muy bien! Sigue así':'¡Eres constante! 🔥 '+runs.length+' carreras';
+  }
+}
+
+function renderHistory(){
+  const runs=getRuns();
+  const list=document.getElementById('history-list');
+  const totals=document.getElementById('history-totals');
+  if(runs.length===0){
+    totals.innerHTML='';
+    list.innerHTML=`<div class="empty-state"><div class="big">🏃</div><p>Aún no tienes carreras guardadas.<br>¡Completa tu primera sesión!</p></div>`;
+    return;
+  }
+  const totalKm=runs.reduce((a,r)=>a+r.dist,0);
+  const totalSec=runs.reduce((a,r)=>a+r.sec,0);
+  totals.innerHTML=`
+    <div class="total-banner">
+      <div><div class="val">${totalKm.toFixed(1)}</div><div class="lbl">km totales</div></div>
+      <div><div class="val">${runs.length}</div><div class="lbl">carreras</div></div>
+      <div><div class="val">${fmtTime(Math.round(totalSec/runs.length))}</div><div class="lbl">prom. tiempo</div></div>
+    </div>`;
+  list.innerHTML=runs.map((r,i)=>{
+    const d=new Date(r.date);
+    const badge=i===0?'<span class="run-item-badge badge-green">Última</span>':r.dist>3?'<span class="run-item-badge badge-purple">🔥 PR</span>':'';
+    return `<div class="run-item">
+      <div class="run-item-icon">🏃</div>
+      <div class="run-item-info">
+        <div class="run-item-date">${d.toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long'})}</div>
+        <div class="run-item-stats">${r.dist.toFixed(2)} km · ${fmtTime(r.sec)}</div>
+      </div>
+      ${badge}
+    </div>`;
+  }).join('');
+}
+
+// NAVIGATION
+function goTo(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('screen-'+screen).classList.add('active');
+  document.getElementById('nav-'+screen).classList.add('active');
+  if(screen==='warmup') initWarmup();
+  if(screen==='history') renderHistory();
+  if(screen==='home') updateHomeStats();
+}
+
+// INIT
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js').catch(()=>{});
+}
+updateHomeStats();
+</script>
+</body>
+</html>
