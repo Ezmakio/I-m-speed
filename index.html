@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a0f">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="RunFlow">
 <title>RunFlow</title>
@@ -502,6 +503,9 @@ function toggleRun(){
         points.push(p);
         updateRunUI();
         drawRoute();
+      },err=>{
+        console.warn('GPS error:',err.message);
+        simulateGPS();
       },{enableHighAccuracy:true,maximumAge:2000,timeout:10000});
     } else {
       // Simulate for demo
@@ -635,7 +639,7 @@ function goTo(screen){
 
 // INIT
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
 updateHomeStats();
 </script>
