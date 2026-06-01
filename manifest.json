@@ -2,7 +2,7 @@
   "name": "RunFlow — Tu entrenador de carrera",
   "short_name": "RunFlow",
   "description": "Calentamiento guiado, tracking GPS e historial de carreras",
-  "start_url": "/index.html",
+  "start_url": "https://ezmakio.github.io/I-m-speed/",
   "display": "standalone",
   "background_color": "#0a0a0f",
   "theme_color": "#0a0a0f",
