@@ -90,7 +90,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
 .progress-bar{height:100%;background:var(--accent);border-radius:0;transition:width .5s}
 
 /* TIMER MODAL */
-#timer-modal{position:fixed;inset:0;background:rgba(8,2,3,.95);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;display:none}
+#timer-modal{position:fixed;inset:0;background:rgba(8,2,3,.95);z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px}
 #timer-modal.open{display:flex}
 .timer-ex-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center}
 .timer-display{font-family:'Space Mono',monospace;font-size:80px;font-weight:700;color:var(--accent);line-height:1;letter-spacing:-.03em}
@@ -158,9 +158,20 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
 .pocket-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
 .pocket-unlock{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;border:1px solid var(--border2);border-radius:4px;padding:10px 24px;background:var(--surface);cursor:pointer;-webkit-user-select:none;user-select:none}
 
-/* SUMMARY MODAL */
-#summary-modal{position:fixed;inset:0;background:rgba(8,2,3,.97);z-index:400;display:none;flex-direction:column;align-items:center;justify-content:center;gap:0;overflow-y:auto;padding:20px}
-#summary-modal.open{display:flex}
+/* SUMMARY MODAL — FIX: separar display:none del resto */
+#summary-modal{
+  position:fixed;inset:0;
+  background:rgba(8,2,3,.97);
+  z-index:400;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow-y:auto;
+  padding:20px;
+  display:none;
+}
+#summary-modal.open{ display:flex; }
+
 .summary-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 .summary-headline{font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:900;letter-spacing:.02em;text-transform:uppercase;color:var(--accent);line-height:1;text-align:center;margin-bottom:4px}
 .summary-sub{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:600;letter-spacing:.1em;color:var(--muted);margin-bottom:28px;text-align:center}
@@ -552,6 +563,7 @@ function startTimer(idx){
   const total = ex.sec;
   const arc = document.getElementById('timer-arc');
   const circ = 502;
+  clearInterval(timerInterval);
   function tick(){
     document.getElementById('timer-num').textContent = sec;
     const offset = circ * (1 - sec/total);
@@ -596,6 +608,28 @@ let totalDist = 0;
 let lastPos = null;
 let canvas, ctx, canvasW, canvasH;
 
+// FIX mapa: controlar gap de visibilidad para no dibujar saltos GPS
+let wasHidden = false;
+let lastPosBefore = null;
+
+document.addEventListener('visibilitychange', function(){
+  if(document.hidden){
+    // Guardamos posicion antes de ir al background
+    wasHidden = true;
+    lastPosBefore = lastPos ? {...lastPos} : null;
+  } else {
+    // Al volver, si habia GPS activo, descartamos el salto
+    // Resetamos lastPos para que el siguiente punto no calcule distancia del salto
+    if(wasHidden && running && !runPaused){
+      // No resetamos lastPos todavia: lo haremos cuando llegue el siguiente punto
+      wasHidden = false;
+      pendingVisibilityGap = true;
+    }
+  }
+});
+
+let pendingVisibilityGap = false;
+
 function initCanvas(){
   canvas = document.getElementById('route-canvas');
   canvasW = canvas.offsetWidth;
@@ -613,10 +647,31 @@ function haversine(a,b){
   return R*2*Math.atan2(Math.sqrt(s),Math.sqrt(1-s));
 }
 
+// FIX mapa: soporte de segmentos (arrays de puntos con gaps)
+// points ahora es array de segmentos: [[{lat,lon},...], [{lat,lon},...]]
+// Cada vez que hay un gap de visibilidad, creamos un nuevo segmento
+
+function addPoint(p){
+  if(pendingVisibilityGap){
+    // Iniciamos nuevo segmento — no sumamos distancia del salto
+    pendingVisibilityGap = false;
+    lastPos = p;
+    points.push([p]);
+    return;
+  }
+  if(lastPos){
+    const d = haversine(lastPos, p);
+    // Ignorar saltos imposibles (>200m en un tick = 720 km/h): GPS glitch
+    if(d < 0.2) totalDist += d;
+  }
+  lastPos = p;
+  if(points.length === 0) points.push([]);
+  points[points.length-1].push(p);
+}
+
 function drawRoute(){
-  if(!ctx||points.length<1) return;
+  if(!ctx) return;
   ctx.clearRect(0,0,canvasW,canvasH);
-  // Background
   ctx.fillStyle='#0d1117';
   ctx.fillRect(0,0,canvasW,canvasH);
   // Grid
@@ -624,39 +679,44 @@ function drawRoute(){
   ctx.lineWidth=1;
   for(let x=0;x<canvasW;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvasH);ctx.stroke();}
   for(let y=0;y<canvasH;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvasW,y);ctx.stroke();}
-  if(points.length<2){
-    // Just draw dot
-    const p=points[0];
+
+  const allPts = points.flat();
+  if(allPts.length < 1) return;
+  if(allPts.length < 2){
     ctx.beginPath();ctx.arc(canvasW/2,canvasH/2,8,0,Math.PI*2);
     ctx.fillStyle='#00e5a0';ctx.fill();
     return;
   }
-  // Normalize
+
   let minLat=Infinity,maxLat=-Infinity,minLon=Infinity,maxLon=-Infinity;
-  points.forEach(p=>{minLat=Math.min(minLat,p.lat);maxLat=Math.max(maxLat,p.lat);minLon=Math.min(minLon,p.lon);maxLon=Math.max(maxLon,p.lon);});
+  allPts.forEach(p=>{minLat=Math.min(minLat,p.lat);maxLat=Math.max(maxLat,p.lat);minLon=Math.min(minLon,p.lon);maxLon=Math.max(maxLon,p.lon);});
   const pad=40;
   const scaleX=(canvasW-pad*2)/Math.max(maxLon-minLon,.0001);
   const scaleY=(canvasH-pad*2)/Math.max(maxLat-minLat,.0001);
   const toX=lon=>pad+(lon-minLon)*scaleX;
   const toY=lat=>canvasH-pad-(lat-minLat)*scaleY;
-  // Route
-  ctx.beginPath();
-  ctx.moveTo(toX(points[0].lon),toY(points[0].lat));
-  points.forEach(p=>ctx.lineTo(toX(p.lon),toY(p.lat)));
-  ctx.strokeStyle='#00e5a0';ctx.lineWidth=3;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();
-  // Glow
-  ctx.beginPath();
-  ctx.moveTo(toX(points[0].lon),toY(points[0].lat));
-  points.forEach(p=>ctx.lineTo(toX(p.lon),toY(p.lat)));
-  ctx.strokeStyle='rgba(0,229,160,.2)';ctx.lineWidth=8;ctx.stroke();
-  // Current pos
-  const last=points[points.length-1];
+
+  // Dibujar cada segmento por separado (evita lineas rectas del gap)
+  points.forEach((seg, si)=>{
+    if(seg.length < 2) return;
+    ctx.beginPath();
+    ctx.moveTo(toX(seg[0].lon),toY(seg[0].lat));
+    seg.forEach(p=>ctx.lineTo(toX(p.lon),toY(p.lat)));
+    ctx.strokeStyle='#00e5a0';ctx.lineWidth=3;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();
+    // Glow
+    ctx.beginPath();
+    ctx.moveTo(toX(seg[0].lon),toY(seg[0].lat));
+    seg.forEach(p=>ctx.lineTo(toX(p.lon),toY(p.lat)));
+    ctx.strokeStyle='rgba(0,229,160,.2)';ctx.lineWidth=8;ctx.stroke();
+  });
+
+  const last=allPts[allPts.length-1];
   ctx.beginPath();ctx.arc(toX(last.lon),toY(last.lat),8,0,Math.PI*2);
   ctx.fillStyle='#00e5a0';ctx.fill();
   ctx.beginPath();ctx.arc(toX(last.lon),toY(last.lat),14,0,Math.PI*2);
   ctx.strokeStyle='rgba(0,229,160,.3)';ctx.lineWidth=3;ctx.stroke();
-  // Start
-  const first=points[0];
+
+  const first=allPts[0];
   ctx.beginPath();ctx.arc(toX(first.lon),toY(first.lat),5,0,Math.PI*2);
   ctx.fillStyle='#7c6cfa';ctx.fill();
 }
@@ -679,8 +739,12 @@ function updateRunUI(){
   }
 }
 
+// FIX countdown: flag para evitar doble arranque
+let countdownActive = false;
+
 function toggleRun(){
   if(!running){
+    if(countdownActive) return; // Evitar doble countdown
     startCountdown();
   } else if(!runPaused){
     runPaused=true;
@@ -695,7 +759,7 @@ function toggleRun(){
   }
 }
 
-// COUNTDOWN
+// COUNTDOWN — FIX: usar índice local, no compartido, y limpiar bien
 const COUNTDOWN_STEPS = [
   {word:'En sus marcas',num:'',dur:1000},
   {word:'Listos',num:'',dur:900},
@@ -706,12 +770,17 @@ const COUNTDOWN_STEPS = [
 ];
 
 function startCountdown(){
+  countdownActive = true;
   const overlay = document.getElementById('countdown-overlay');
   overlay.classList.add('open');
   let i = 0;
+  let cancelled = false;
+
   function step(){
+    if(cancelled) return;
     if(i >= COUNTDOWN_STEPS.length){
       overlay.classList.remove('open');
+      countdownActive = false;
       beginRun();
       return;
     }
@@ -738,9 +807,19 @@ function releaseWakeLock(){
   if(wakeLock){ wakeLock.release(); wakeLock=null; }
 }
 
+// Re-adquirir wake lock si se pierde (ej. al volver de otra app)
+document.addEventListener('visibilitychange', async ()=>{
+  if(document.visibilityState === 'visible' && running && !runPaused){
+    try{
+      if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen');
+    }catch(e){}
+  }
+});
+
 function beginRun(){
   running=true;
   runPaused=false;
+  points = [[]]; // FIX: inicializar con un segmento vacío
   document.getElementById('run-btn').textContent='Pausar';
   document.getElementById('stop-btn').style.display='flex';
   document.getElementById('pocket-btn').style.display='flex';
@@ -759,10 +838,9 @@ function beginRun(){
   if(navigator.geolocation){
     watchId=navigator.geolocation.watchPosition(
       function(pos){
+        if(runPaused) return; // No acumular puntos mientras pausado
         const p={lat:pos.coords.latitude,lon:pos.coords.longitude};
-        if(lastPos) totalDist+=haversine(lastPos,p);
-        lastPos=p;
-        points.push(p);
+        addPoint(p);
         updateRunUI();
         updatePocketUI();
         drawRoute();
@@ -823,12 +901,17 @@ function simulateGPS(){
   let lat=-12.0966+Math.random()*.001,lon=-77.0344+Math.random()*.001;
   simInterval=setInterval(()=>{
     if(runPaused) return;
+    if(pendingVisibilityGap){
+      // Nuevo segmento tras gap
+      pendingVisibilityGap = false;
+      lastPos = {lat,lon};
+      points.push([{lat,lon}]);
+      return;
+    }
     lat+=(.00002-.00001*Math.random());
     lon+=(.00003-.00001*Math.random());
     const p={lat,lon};
-    if(lastPos) totalDist+=haversine(lastPos,p);
-    lastPos=p;
-    points.push(p);
+    addPoint(p);
     updateRunUI();
     updatePocketUI();
     drawRoute();
@@ -855,11 +938,10 @@ function stopRun(){
   }
 }
 
-// SUMMARY
+// SUMMARY — FIX: guardar datos antes de mostrar, mostrar con pequeño delay para asegurar render
 let pendingSec=0, pendingDist=0, pendingPts=[];
 
 function calcCalories(sec, dist){
-  // Aprox: 60 kcal/km para 70kg caminando rápido/corriendo suave
   const byDist = dist * 62;
   const byTime = (sec/60) * 5.5;
   return Math.round((byDist+byTime)/2);
@@ -877,10 +959,15 @@ function showSummary(sec, dist){
     const pm2=sec/60/dist;
     const pm=Math.floor(pm2),ps=Math.round((pm2-pm)*60);
     document.getElementById('sum-pace').textContent=pm+':'+(ps<10?'0':'')+ps;
+  } else {
+    document.getElementById('sum-pace').textContent='--:--';
   }
   const prEl=document.getElementById('sum-pr');
   isPR ? prEl.classList.add('show') : prEl.classList.remove('show');
-  document.getElementById('summary-modal').classList.add('open');
+  // FIX resumen: pequeño requestAnimationFrame para asegurar que el DOM está listo
+  requestAnimationFrame(()=>{
+    document.getElementById('summary-modal').classList.add('open');
+  });
 }
 
 function saveSummary(){
@@ -897,6 +984,7 @@ function discardSummary(){
 
 function resetRunState(){
   runSeconds=0; totalDist=0; lastPos=null; points=[]; watchId=null;
+  pendingVisibilityGap=false; wasHidden=false;
   updateRunUI();
   document.getElementById('map-placeholder').style.display='flex';
   if(ctx) ctx.clearRect(0,0,canvasW,canvasH);
@@ -905,7 +993,7 @@ function resetRunState(){
 // STORAGE
 function saveRun(sec,dist,pts){
   const runs=getRuns();
-  runs.unshift({date:new Date().toISOString(),sec,dist:parseFloat(dist.toFixed(2)),pts:pts.length});
+  runs.unshift({date:new Date().toISOString(),sec,dist:parseFloat(dist.toFixed(2)),pts:pts.flat ? pts.flat().length : pts.length});
   localStorage.setItem('runflow_runs',JSON.stringify(runs.slice(0,50)));
   updateHomeStats();
 }
